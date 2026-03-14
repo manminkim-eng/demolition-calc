@@ -1,0 +1,20 @@
+{
+  "name": "건축물 해체감리 대가 산출기",
+  "short_name": "해체감리",
+  "description": "건축물 해체감리 대가 산출기 - 건축물관리법 시행령 기준",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#f4f6f9",
+  "theme_color": "#0c4da2",
+  "lang": "ko",
+  "categories": ["utilities", "productivity"],
+  "icons": [
+    { "src": "icons/favicon-16.png",      "sizes": "16x16",   "type": "image/png" },
+    { "src": "icons/favicon-32.png",      "sizes": "32x32",   "type": "image/png" },
+    { "src": "icons/icon-192.png",        "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png",        "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ],
+  "prefer_related_applications": false
+}

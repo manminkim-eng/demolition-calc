@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>건축물 해체감리 대가 산출기 · MANMIN-Ver1.3</title>
+<link rel="manifest" href="manifest.json"/>
+<meta name="theme-color" content="#0c4da2"/>
+<meta name="description" content="건축물 해체감리 대가 산출기 - 건축물관리법 시행령 기준"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="해체감리"/>
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png"/>
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png"/>
+<link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Pretendard',sans-serif;background:#f4f6f9;color:#1a2744;min-height:100vh;}
+
+/* ══ HEADER ══ */
+.app-header{background:#0c4da2;position:sticky;top:0;z-index:30;box-shadow:0 2px 16px rgba(12,77,162,.3);}
+.header-inner{max-width:1060px;margin:0 auto;padding:0 28px;height:68px;display:flex;align-items:center;justify-content:space-between;}
+.brand-logo{display:flex;align-items:center;gap:14px;}
+.brand-icon{width:42px;height:42px;background:#e63312;border-radius:9px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 10px rgba(230,51,18,.45);flex-shrink:0;}
+.brand-icon svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.brand-title{font-size:17px;font-weight:900;color:#fff;letter-spacing:-.02em;}
+.brand-sub{font-size:11px;color:rgba(255,255,255,.6);margin-top:2px;letter-spacing:.04em;}
+
+/* 인쇄/PDF 버튼 */
+.btn-print{background:#e63312;color:#fff;border:none;padding:11px 22px;border-radius:9px;font-size:14px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:9px;font-family:inherit;letter-spacing:-.01em;transition:background .18s,transform .1s;box-shadow:0 2px 10px rgba(230,51,18,.38);}
+.btn-print:hover{background:#c62a0c;}
+.btn-print:active{transform:scale(.97);}
+.btn-print svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+/* ══ TAB BAR ══ */
+.tab-bar{background:#0a3d85;border-top:1px solid rgba(255,255,255,.1);}
+.tab-bar-inner{max-width:1060px;margin:0 auto;padding:0 28px;display:flex;}
+.tab-btn{
+  background:none;border:none;cursor:pointer;
+  color:rgba(255,255,255,.5);
+  font-family:inherit;
+  padding:14px 28px;
+  font-size:14px;font-weight:700;
+  position:relative;
+  transition:color .18s,background .18s;
+  display:flex;align-items:center;gap:9px;
+  letter-spacing:-.01em;
+}
+.tab-btn:hover{color:rgba(255,255,255,.88);background:rgba(255,255,255,.05);}
+.tab-btn.active{color:#fff;}
+.tab-btn.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:#f97316;border-radius:2px 2px 0 0;}
+.tab-btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+/* ══ MAIN ══ */
+.main-wrap{max-width:1060px;margin:0 auto;padding:28px 24px;}
+.tab-panel{display:none;animation:fadeUp .25s ease both;}
+.tab-panel.active{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ══ TOTAL BANNER ══ */
+.total-banner{background:linear-gradient(135deg,#0c4da2 0%,#1565c0 100%);border-radius:14px;padding:20px 28px;display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;box-shadow:0 4px 20px rgba(12,77,162,.2);}
+.total-banner-label{font-size:11px;font-weight:700;color:rgba(255,255,255,.65);letter-spacing:.06em;text-transform:uppercase;}
+.total-banner-desc{font-size:12px;color:rgba(255,255,255,.45);margin-top:3px;}
+.total-banner-amount{font-size:30px;font-weight:900;color:#fff;letter-spacing:-.02em;}
+.total-banner-sub{font-size:11px;color:rgba(255,255,255,.5);margin-top:4px;}
+.total-banner-right{text-align:right;}
+
+/* ══ GRID ══ */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.col-stack{display:flex;flex-direction:column;gap:18px;}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+
+/* ══ CARD ══ */
+.card{background:#fff;border:1px solid #e4e9f0;border-radius:12px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,.05);}
+.card-header{display:flex;align-items:center;gap:10px;padding-bottom:14px;margin-bottom:16px;border-bottom:1px solid #eef1f6;}
+.card-icon{width:30px;height:30px;border-radius:8px;background:#eaf0fb;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.card-icon svg{width:15px;height:15px;stroke:#0c4da2;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.card-title{font-size:13px;font-weight:800;color:#1a2744;}
+.card-badge{margin-left:auto;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;background:#fff3ed;color:#c2410c;border:1px solid #fed7aa;letter-spacing:.04em;}
+
+/* ══ FIELD ══ */
+.field-label{font-size:10px;font-weight:700;color:#6b7a99;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;}
+.fire-input{width:100%;padding:9px 13px;background:#f8fafd;border:1.5px solid #dde3ed;border-radius:8px;color:#1a2744;font-size:13px;font-weight:600;font-family:'Pretendard',sans-serif;outline:none;transition:border-color .18s,box-shadow .18s;}
+.fire-input:focus{border-color:#0c4da2;box-shadow:0 0 0 3px rgba(12,77,162,.12);background:#fff;}
+.fire-input:disabled{opacity:.35;cursor:not-allowed;background:#f1f4f9;}
+.fire-input.red-border{border-color:#fca5a5;}
+.fire-input.red-border:focus{border-color:#e63312;box-shadow:0 0 0 3px rgba(230,51,18,.12);}
+.fire-select{width:100%;padding:9px 32px 9px 13px;background:#f8fafd;border:1.5px solid #dde3ed;border-radius:8px;color:#1a2744;font-size:12px;font-weight:700;font-family:'Pretendard',sans-serif;outline:none;cursor:pointer;transition:border-color .18s;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%230c4da2' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;}
+.fire-select:focus{border-color:#0c4da2;box-shadow:0 0 0 3px rgba(12,77,162,.12);background-color:#fff;}
+
+/* ══ WORKER SLOTS ══ */
+.worker-slot{border:1.5px solid #e4e9f0;border-radius:10px;padding:14px;margin-bottom:10px;background:#fafbfd;}
+.worker-slot.primary{border-left:3px solid #0c4da2;}
+.worker-slot.secondary{border-left:3px solid #94a3b8;}
+.worker-tag{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.tag-pill{padding:2px 8px;border-radius:20px;font-size:9px;font-weight:700;}
+.tag-blue{background:#dbeafe;color:#1d4ed8;}
+.tag-gray{background:#f1f5f9;color:#64748b;}
+.mini-calc{margin-top:8px;padding:6px 10px;border-radius:6px;background:#eff6ff;font-size:10px;color:#1d4ed8;font-weight:600;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.flex-row{display:flex;align-items:center;gap:8px;}
+.unit-label{font-size:11px;color:#94a3b8;font-weight:700;white-space:nowrap;}
+
+/* ══ EXPENSE BOX ══ */
+.nego-box{background:#fff8f5;border:1.5px solid #fdba74;border-radius:10px;padding:14px;margin-top:12px;}
+.nego-label{font-size:10px;font-weight:700;color:#ea580c;letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:center;gap:6px;margin-bottom:8px;}
+.nego-label svg{width:11px;height:11px;stroke:#ea580c;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.nego-note{font-size:10px;color:#fb923c;margin-top:6px;}
+
+/* ══ RATE SLIDER ══ */
+.rate-slot{background:#f8fafd;border:1.5px solid #dde3ed;border-radius:10px;padding:14px;}
+.rate-slot-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
+.rate-slot-label{font-size:10px;font-weight:800;color:#6b7a99;letter-spacing:.08em;text-transform:uppercase;}
+.rate-slot-value{font-size:18px;font-weight:900;color:#0c4da2;}
+.rate-slot-value.red{color:#e63312;}
+.rate-range-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;background:#fff3ed;color:#c2410c;border:1px solid #fed7aa;margin-bottom:10px;display:inline-block;}
+.rate-slider{width:100%;height:4px;border-radius:2px;outline:none;cursor:pointer;margin:8px 0 4px;-webkit-appearance:none;appearance:none;}
+.rate-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:18px;height:18px;border-radius:50%;background:#0c4da2;border:2px solid #fff;box-shadow:0 1px 6px rgba(12,77,162,.35);cursor:pointer;}
+.rate-slider.red-thumb::-webkit-slider-thumb{background:#e63312;box-shadow:0 1px 6px rgba(230,51,18,.35);}
+.rate-slider::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#0c4da2;border:2px solid #fff;box-shadow:0 1px 6px rgba(12,77,162,.35);cursor:pointer;}
+.rate-minmax{display:flex;justify-content:space-between;font-size:9px;color:#94a3b8;font-weight:600;}
+.rate-sub{font-size:10px;color:#64748b;margin-top:6px;}
+.rate-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.vat-toggle{display:flex;align-items:center;gap:10px;padding:11px 14px;background:#f8fafd;border:1.5px solid #dde3ed;border-radius:8px;cursor:pointer;margin-top:14px;transition:border-color .18s;}
+.vat-toggle:hover{border-color:#0c4da2;}
+.vat-toggle input[type=checkbox]{accent-color:#0c4da2;width:16px;height:16px;cursor:pointer;flex-shrink:0;}
+.vat-toggle label{font-size:12px;font-weight:700;color:#4a5568;cursor:pointer;}
+
+/* ══ A4 PREVIEW ══ */
+.result-wrap{display:flex;justify-content:center;padding:24px 0;overflow-x:auto;background:#e8ecf1;}
+
+.a4-page{
+  font-family:'Pretendard',sans-serif;
+  width:210mm;height:297mm;
+  padding:13mm 20mm 12mm 20mm;
+  background:#fff;color:#1a1a1a;
+  box-sizing:border-box;
+  box-shadow:0 6px 40px rgba(0,0,0,.18);
+  border:1px solid #c8d0dc;
+  display:flex;flex-direction:column;
+  overflow:hidden;
+  flex-shrink:0;
+}
+
+/* ── 상단 바 ── */
+.a4-top-bar{height:5px;background:#0c4da2;border-radius:2px;margin-bottom:22px;flex-shrink:0;}
+
+/* ── 제목 ── */
+.a4-title{text-align:center;margin-bottom:20px;flex-shrink:0;}
+.a4-title h2{font-size:22px;font-weight:900;color:#0c4da2;letter-spacing:-.01em;font-family:'Pretendard',sans-serif;}
+
+/* ── 테이블 공통 ── */
+.a4-tbl{width:100%;border-collapse:collapse;table-layout:fixed;flex-shrink:0;}
+.a4-tbl th,.a4-tbl td{
+  border:1px solid #3a4a5e;
+  height:38px;
+  padding:0 12px;
+  vertical-align:middle;
+  font-size:12.5px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  font-family:'Pretendard',sans-serif;
+}
+.a4-tbl thead tr{background:#0c4da2;color:#fff;}
+.a4-tbl thead th{font-size:13px;font-weight:700;text-align:center;height:40px;}
+
+/* ── 공사 정보 테이블 ── */
+.a4-info-tbl{margin-bottom:16px;}
+.a4-th{background:#dbeafe;font-weight:700;text-align:center;width:100px;color:#0c4da2;font-size:12px;}
+.a4-td{font-weight:600;font-size:12.5px;}
+.a4-td-c{text-align:center;font-size:12.5px;}
+
+/* ── 산출 내역 테이블 ── */
+.a4-calc-tbl{margin-bottom:18px;}
+.a4-item{background:#f5f7fa;font-weight:700;text-align:left;padding-left:16px;font-size:12.5px;}
+.a4-desc{text-align:right;font-size:11px;color:#5a6a80;font-style:italic;}
+.a4-amt{text-align:right;font-weight:700;font-size:12.5px;}
+.a4-row-sub{background:#dbeafe;}
+.a4-row-sub td{color:#0c4da2;font-weight:800;font-size:12.5px;}
+.a4-row-nego td{color:#dc2626;}
+.a4-row-vat td{color:#1d4ed8;}
+.a4-tfoot-row{background:#0c4da2;}
+.a4-tfoot-row td{color:#fff;font-weight:800;font-size:14px;height:56px;letter-spacing:.08em;text-align:center;}
+.a4-tfoot-row .a4-amt{font-size:17px;font-weight:900;}
+
+/* ── 서명 영역 ── */
+.a4-sign{margin-top:auto;padding-top:14px;flex-shrink:0;}
+.a4-sign-submit{font-size:12px;color:#334155;margin-bottom:8px;text-align:right;}
+.a4-sign-date{font-size:15px;font-weight:800;letter-spacing:.16em;color:#0c4da2;margin-bottom:10px;text-align:right;}
+.a4-sign-legal{border-top:1.5px solid #dde3ed;padding-top:8px;margin-bottom:10px;}
+.a4-sign-legal p{font-size:9px;color:#94a3b8;line-height:1.7;}
+.a4-sign-legal .lbl{font-size:9.5px;font-weight:700;color:#64748b;margin-bottom:3px;}
+.a4-sign-supervisor{display:flex;justify-content:flex-end;align-items:center;gap:12px;}
+.a4-sign-supervisor .name{font-size:14px;font-weight:800;letter-spacing:.08em;color:#1a2744;}
+.a4-sign-supervisor .hint{font-size:13px;color:#1a2744;font-weight:700;}
+
+/* ── 하단 바 + 버전 ── */
+.a4-footer{flex-shrink:0;margin-top:12px;}
+.a4-bot-bar{height:5px;background:#0c4da2;border-radius:2px;}
+.a4-footer-ver{text-align:right;font-size:7.5px;font-weight:700;color:#94a3b8;letter-spacing:.12em;margin-top:4px;}
+.a4-ver{display:none;}
+
+/* ══ PRINT ══ */
+@media print{
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+  .no-print{display:none!important;}
+  html,body{margin:0;padding:0;background:#fff;}
+  .main-wrap{padding:0;margin:0;}
+  .main-wrap>.tab-panel{display:none!important;}
+  .main-wrap>#tab-result{display:block!important;padding:0;margin:0;}
+  .result-wrap{padding:0;margin:0;display:block;overflow:visible;background:#fff;}
+  /* a4-page 자체 padding/size 유지 — border·shadow만 제거 */
+  .a4-page{border:none!important;box-shadow:none!important;margin:0!important;}
+  @page{size:A4 portrait;margin:0;}
+}
+.ref-block{border:1px solid #e4e9f0;border-radius:10px;overflow:hidden;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.04);margin-bottom:16px;}
+.ref-block-header{background:#0c4da2;padding:10px 16px;font-size:11px;font-weight:800;color:#fff;letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:center;gap:8px;}
+.ref-block-header svg{width:13px;height:13px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.ref-block-body{padding:14px 16px;}
+.ref-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f1f4f9;font-size:12px;}
+.ref-item:last-child{border-bottom:none;}
+.ref-item-label{color:#64748b;font-weight:600;}
+.ref-item-value{color:#0c4da2;font-weight:700;}
+
+/* ══ MISC ══ */
+.warn-box{background:#fff8f5;border:1px solid #fdba74;border-radius:8px;padding:10px 12px;display:flex;gap:8px;align-items:flex-start;margin-top:8px;}
+.warn-box svg{width:13px;height:13px;stroke:#ea580c;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;margin-top:2px;}
+.good-box{background:#f0fdf4;border:1px solid #86efac;border-left:3px solid #16a34a;border-radius:0 8px 8px 0;padding:12px 14px;margin-top:8px;}
+.bad-box{background:#fff8f5;border:1px solid #fdba74;border-left:3px solid #ea580c;border-radius:0 8px 8px 0;padding:12px 14px;margin-bottom:8px;}
+.mb16{margin-bottom:16px;}
+.ref-two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+
+/* ══ PRINT ══ - 위 블록에 통합 완료 */
+
+/* ══ PWA 설치 배너 ══ */
+.pwa-install-banner{position:fixed;bottom:16px;left:16px;right:16px;z-index:9999;background:linear-gradient(135deg,#0c4da2 0%,#0a3270 100%);border:1px solid rgba(255,255,255,.2);border-radius:16px;padding:16px;display:flex;align-items:center;gap:12px;box-shadow:0 8px 32px rgba(0,0,0,.3);animation:slideUp .4s ease-out;}
+.pwa-install-banner img{width:48px;height:48px;border-radius:12px;flex-shrink:0;box-shadow:0 4px 12px rgba(0,0,0,.3);}
+.pwa-install-banner .pwa-text{flex:1;min-width:0;}
+.pwa-install-banner .pwa-title{color:#fff;font-size:13px;font-weight:800;}
+.pwa-install-banner .pwa-desc{color:#93c5fd;font-size:10px;font-weight:600;margin-top:4px;}
+.pwa-install-banner .pwa-btns{display:flex;gap:8px;flex-shrink:0;}
+.pwa-install-banner .btn-dismiss{color:rgba(255,255,255,.6);font-size:11px;font-weight:700;padding:8px 12px;border:none;background:transparent;cursor:pointer;border-radius:8px;font-family:inherit;}
+.pwa-install-banner .btn-install{background:#fff;color:#0c4da2;font-size:11px;font-weight:900;padding:8px 16px;border:none;border-radius:8px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.2);font-family:inherit;}
+@keyframes slideUp{from{transform:translateY(100%);opacity:0}to{transform:translateY(0);opacity:1}}
+@media print{.pwa-install-banner{display:none !important;}}
+</style>
+</head>
+<body>
+
+<!-- ══ HEADER ══ -->
+<header class="app-header no-print">
+  <div class="header-inner">
+    <div class="brand-logo">
+      <div class="brand-icon">
+        <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      </div>
+      <div>
+        <div class="brand-title">건축물 해체감리 대가 산출기</div>
+        <div class="brand-sub">MANMIN-Ver1.3 &nbsp;·&nbsp; 2026년 기준노임 적용</div>
+      </div>
+    </div>
+    <!-- ① 되돌리기 삭제 → 인쇄/PDF저장 버튼만 -->
+    <button class="btn-print" id="btn-print" onclick="doPrint()">
+      <svg viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      인쇄 / PDF 저장
+    </button>
+  </div>
+
+  <!-- ② 탭바: font-size 14px, padding 키움, gap 키움 -->
+  <div class="tab-bar">
+    <div class="tab-bar-inner">
+      <button class="tab-btn active" data-tab="input" onclick="switchTab('input')">
+        <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        산출 입력
+      </button>
+      <button class="tab-btn" data-tab="result" onclick="switchTab('result')">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        산출서 미리보기
+      </button>
+      <button class="tab-btn" data-tab="reference" onclick="switchTab('reference')">
+        <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        참고 사항
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="main-wrap">
+
+  <!-- ══════════ INPUT TAB ══════════ -->
+  <div id="tab-input" class="tab-panel active">
+
+    <div class="total-banner">
+      <div>
+        <div class="total-banner-label">실시간 합계 금액 (VAT 포함)</div>
+        <div class="total-banner-desc" id="banner-desc">감리기간 0일 · 감리원 1인 · VAT 포함</div>
+      </div>
+      <div class="total-banner-right">
+        <div class="total-banner-amount" id="banner-total">₩ 0</div>
+        <div class="total-banner-sub" id="banner-sub">공급가액 0 원</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <!-- 왼쪽 -->
+      <div class="col-stack">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+            <span class="card-title">공사 정보</span>
+          </div>
+          <div class="field-label">공사명</div>
+          <input class="fire-input" type="text" id="projectName" value="만민 건축사 사옥 해체공사" oninput="recalc()" style="margin-bottom:12px;"/>
+          <div style="display:grid;grid-template-columns:7fr 3fr;gap:12px;">
+            <div>
+              <div class="field-label">감리자</div>
+              <input class="fire-input" type="text" id="supervisorName" value="(주)대성건축사사무소 김만민" oninput="recalc()"/>
+            </div>
+            <div>
+              <div class="field-label">작성일</div>
+              <input class="fire-input" type="text" id="reportDate" value="2026. 03. 13" oninput="recalc()"/>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+            <span class="card-title">인력 투입 설정</span>
+          </div>
+          <div class="worker-slot primary">
+            <div class="worker-tag" style="color:#0c4da2;">SUPERVISOR 01 <span class="tag-pill tag-blue">주감리</span></div>
+            <div class="grid-2">
+              <select class="fire-select" id="sup1Grade" onchange="recalc()">
+                <option value="professional">기술사 / 건축사</option>
+                <option value="special">특급기술자</option>
+                <option value="high">고급기술자</option>
+                <option value="middle">중급기술자</option>
+                <option value="low">초급기술자</option>
+              </select>
+              <div class="flex-row">
+                <input class="fire-input" type="number" id="sup1Days" value="5" min="0" oninput="recalc()"/>
+                <span class="unit-label">일</span>
+              </div>
+            </div>
+            <div class="mini-calc" id="mini1">467,217 × 5일 = <strong>2,336,085</strong> 원</div>
+          </div>
+          <div class="worker-slot secondary">
+            <div class="worker-tag" style="color:#64748b;">SUPERVISOR 02 <span class="tag-pill tag-gray">보조감리</span></div>
+            <div class="grid-2">
+              <select class="fire-select" id="sup2Grade" onchange="recalc()">
+                <option value="none">미투입</option>
+                <option value="professional">기술사 / 건축사</option>
+                <option value="special">특급기술자</option>
+                <option value="high">고급기술자</option>
+                <option value="middle">중급기술자</option>
+                <option value="low">초급기술자</option>
+              </select>
+              <div class="flex-row">
+                <input class="fire-input" type="number" id="sup2Days" value="0" min="0" oninput="recalc()" disabled/>
+                <span class="unit-label">일</span>
+              </div>
+            </div>
+            <div class="mini-calc" id="mini2" style="background:#f1f5f9;color:#64748b;">미투입</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 오른쪽 (③ 실시간 산출 내역창 삭제 후 2개 카드만) -->
+      <div class="col-stack">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+            <span class="card-title">직접 입력 항목</span>
+            <span class="card-badge">실비 정산</span>
+          </div>
+          <div class="grid-2 mb16">
+            <div>
+              <div class="field-label" style="color:#e63312;">직접경비 (원)</div>
+              <input class="fire-input red-border" type="text" inputmode="numeric" id="directExpenses" value="0" oninput="fmtInput(this);recalc()"/>
+            </div>
+            <div>
+              <div class="field-label" style="color:#0c4da2;">보험공제료 (원)</div>
+              <input class="fire-input" type="text" inputmode="numeric" id="insuranceFee" value="0" oninput="fmtInput(this);recalc()"/>
+            </div>
+          </div>
+          <div class="nego-box">
+            <div class="nego-label">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+              NEGO 차감액 (원)
+            </div>
+            <input class="fire-input" type="text" inputmode="numeric" id="negoAmount" value="0" placeholder="협의 차감액 입력" oninput="fmtInput(this);recalc()" style="border-color:#fdba74;background:#fff;"/>
+            <div class="nego-note">* 입력한 금액만큼 최종 공급가액에서 차감됩니다.</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+            <span class="card-title">산출 요율 설정</span>
+            <span class="card-badge">법정 범위 적용</span>
+          </div>
+          <div class="rate-grid">
+            <div class="rate-slot">
+              <div class="rate-slot-header">
+                <span class="rate-slot-label">제경비율</span>
+                <span class="rate-slot-value" id="overheadRateLabel">110<span style="font-size:12px;font-weight:600;color:#64748b;">%</span></span>
+              </div>
+              <div class="rate-range-badge">법정 범위: 110% ~ 120%</div>
+              <input type="range" class="rate-slider" id="overheadRate" min="110" max="120" step="1" value="110" oninput="updateSlider('overheadRate');recalc();" style="background:linear-gradient(to right,#0c4da2 0%,#dde3ed 0%);"/>
+              <div class="rate-minmax"><span>110%</span><span>120%</span></div>
+              <div class="rate-sub" id="overheadCalc">직접인건비의 110%</div>
+            </div>
+            <div class="rate-slot">
+              <div class="rate-slot-header">
+                <span class="rate-slot-label">기술료율</span>
+                <span class="rate-slot-value red" id="techFeeRateLabel">20<span style="font-size:12px;font-weight:600;color:#64748b;">%</span></span>
+              </div>
+              <div class="rate-range-badge">법정 범위: 20% ~ 40%</div>
+              <input type="range" class="rate-slider red-thumb" id="techFeeRate" min="20" max="40" step="1" value="20" oninput="updateSlider('techFeeRate');recalc();" style="background:linear-gradient(to right,#e63312 0%,#dde3ed 0%);"/>
+              <div class="rate-minmax"><span>20%</span><span>40%</span></div>
+              <div class="rate-sub" id="techFeeCalc">(인건비+제경비)의 20%</div>
+            </div>
+          </div>
+          <label class="vat-toggle">
+            <input type="checkbox" id="includeVat" checked onchange="recalc()"/>
+            <span>부가가치세(10%) 가산</span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div><!-- /tab-input -->
+
+  <!-- ══════════ RESULT TAB ══════════ -->
+  <div id="tab-result" class="tab-panel">
+    <div class="result-wrap">
+      <div class="a4-page" id="print-area">
+
+        <!-- 상단 파란 바 -->
+        <div class="a4-top-bar"></div>
+
+        <!-- 제목 -->
+        <div class="a4-title">
+          <h2>건축물 해체공사 감리 대가 산출서</h2>
+        </div>
+
+        <!-- 공사 정보 테이블 -->
+        <table class="a4-tbl a4-info-tbl">
+          <tbody>
+            <tr>
+              <td class="a4-th" style="width:108px;">공 사 명</td>
+              <td class="a4-td" colspan="3" id="r-projectName">-</td>
+            </tr>
+            <tr>
+              <td class="a4-th">산출방식</td>
+              <td class="a4-td-c">실비정액가산방식</td>
+              <td class="a4-th" style="width:108px;">대상규모</td>
+              <td class="a4-td-c" style="font-weight:700;color:#0c4da2;font-style:italic;">해체 허가 (상주)</td>
+            </tr>
+            <tr>
+              <td class="a4-th">감리인원</td>
+              <td class="a4-td-c" id="r-supervisors">-</td>
+              <td class="a4-th">감리기간</td>
+              <td class="a4-td-c" style="font-weight:800;color:#0c4da2;" id="r-days">0일</td>
+            </tr>
+            <tr>
+              <td class="a4-th">감 리 자</td>
+              <td class="a4-td" colspan="3" id="r-supervisorName">-</td>
+            </tr>
+            <tr>
+              <td class="a4-th">작 성 일</td>
+              <td class="a4-td" colspan="3" id="r-reportDate">-</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- 산출 내역 테이블 -->
+        <table class="a4-tbl a4-calc-tbl">
+          <thead>
+            <tr>
+              <th style="width:170px;">항 목</th>
+              <th>산 출 내 역</th>
+              <th style="width:160px;">금 액 (원)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="a4-item">1. 직접인건비</td>
+              <td class="a4-desc" id="r-labor-desc">-</td>
+              <td class="a4-amt" id="r-directLabor">0</td>
+            </tr>
+            <tr>
+              <td class="a4-item">2. 제경비</td>
+              <td class="a4-desc" id="r-overhead-desc">직접인건비의 110%</td>
+              <td class="a4-amt" id="r-overhead">0</td>
+            </tr>
+            <tr>
+              <td class="a4-item">3. 기술료</td>
+              <td class="a4-desc" id="r-techfee-desc">(인건비+제경비)의 20%</td>
+              <td class="a4-amt" id="r-techFee">0</td>
+            </tr>
+            <tr>
+              <td class="a4-item">4. 직접경비</td>
+              <td class="a4-desc">여비 및 현장활동 실비 등</td>
+              <td class="a4-amt" id="r-directExp">0</td>
+            </tr>
+            <tr>
+              <td class="a4-item">5. 손해배상보험료</td>
+              <td class="a4-desc">손해배상공제료 실제 불입액</td>
+              <td class="a4-amt" id="r-insurance">0</td>
+            </tr>
+            <tr class="a4-row-nego">
+              <td class="a4-item">6. NEGO (네고)</td>
+              <td class="a4-desc" style="color:#e63312;">계약 시 협의 차감액</td>
+              <td class="a4-amt" id="r-nego">- 0</td>
+            </tr>
+            <tr class="a4-row-sub">
+              <td colspan="2" style="text-align:center;font-weight:800;font-size:12px;">산출 합계 (공급가액)</td>
+              <td class="a4-amt" id="r-subtotal">0</td>
+            </tr>
+            <tr class="a4-row-vat">
+              <td class="a4-item" style="color:#1d4ed8;">7. 부가가치세</td>
+              <td class="a4-desc" style="color:#3b82f6;" id="r-vat-desc">공급가액의 10%</td>
+              <td class="a4-amt" id="r-vat">0</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr class="a4-tfoot-row">
+              <td colspan="2">최 종 합 계 (VAT 포함)</td>
+              <td class="a4-amt" id="r-total">0</td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <!-- 서명 영역 -->
+        <div class="a4-sign">
+          <p class="a4-sign-submit">위와 같이 건축물 해체공사 감리 대가를 산출하여 제출합니다.</p>
+          <p class="a4-sign-date" id="r-date2">2026. 03. 13</p>
+          <div class="a4-sign-legal">
+            <p class="lbl">산출 근거 (건축물관리법)</p>
+            <p>건축물관리법 제30조 내지 제32조에 의거, 해체 허가 대상 건축물은 반드시 해체공사 감리자를 지정해야 하며, 그 대가는 국토교통부 고시 「건축물 해체계획서의 작성 및 감리업무 등에 관한 기준」을 따릅니다. 최종 합계 금액은 원 단위 절삭(천 단위 미만)되어 산출되었습니다. 실제 계약 시 제반 조건에 따라 변동될 수 있습니다.</p>
+          </div>
+          <div class="a4-sign-supervisor">
+            <span class="name">감 리 자 :</span>
+            <span class="hint" id="r-sign-name">(주)대성건축사사무소 김만민</span>
+          </div>
+        </div>
+
+        <!-- 하단 바 + 바닥글 버전 (우측) -->
+        <div class="a4-footer">
+          <div class="a4-bot-bar"></div>
+          <div class="a4-footer-ver">MANMIN-Ver1.3</div>
+        </div>
+
+      </div>
+    </div>
+  </div><!-- /tab-result -->
+
+  <!-- ══════════ REFERENCE TAB ══════════ -->
+  <div id="tab-reference" class="tab-panel">
+
+    <div class="ref-two-col mb16">
+      <div class="ref-block">
+        <div class="ref-block-header">
+          <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          법적 근거
+        </div>
+        <div class="ref-block-body">
+          <div style="margin-bottom:10px;">
+            <div style="font-size:12px;font-weight:800;color:#0c4da2;margin-bottom:4px;">「건축물관리법 시행규칙」</div>
+            <div style="font-size:11px;color:#64748b;line-height:1.7;">감리 의무화 및 대가 산정의 최상위 법적 근거. 건축물관리법 제30조~제32조에 의거하여 해체 허가 대상 건축물은 반드시 감리자를 지정해야 합니다.</div>
+          </div>
+          <div style="border-top:1px solid #eef1f6;padding-top:10px;margin-bottom:10px;">
+            <div style="font-size:12px;font-weight:800;color:#0c4da2;margin-bottom:4px;">국토교통부 고시 「건축물 해체계획서의 작성 및 감리업무 등에 관한 기준」</div>
+            <div style="font-size:11px;color:#64748b;line-height:1.7;">실제 현장에서 적용해야 하는 구체적 산출 공식 및 배치 기준 제시.</div>
+          </div>
+          <div class="warn-box">
+            <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <div style="font-size:11px;color:#92400e;font-weight:600;line-height:1.7;">모든 감리비 산출은 이 두 가지 법적 프레임워크 내에서 엄격히 통제되며, 임의로 단가나 방식을 변경할 수 없습니다.</div>
+          </div>
+        </div>
+      </div>
+      <div class="ref-block">
+        <div class="ref-block-header">
+          <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          2026년 기준 노임단가 (한국엔지니어링협회 공표)
+        </div>
+        <div class="ref-block-body">
+          <div class="ref-item"><span class="ref-item-label">건축사 / 기술사</span><span class="ref-item-value">467,217 원/일</span></div>
+          <div class="ref-item"><span class="ref-item-label">특급기술자</span><span class="ref-item-value">373,353 원/일</span></div>
+          <div class="ref-item"><span class="ref-item-label">고급기술자</span><span class="ref-item-value">310,884 원/일</span></div>
+          <div class="ref-item"><span class="ref-item-label">중급기술자</span><span class="ref-item-value">295,138 원/일</span></div>
+          <div class="ref-item"><span class="ref-item-label">초급기술자</span><span class="ref-item-value">235,459 원/일</span></div>
+          <div style="margin-top:10px;background:#eff6ff;border-radius:6px;padding:8px 10px;font-size:10px;color:#1d4ed8;line-height:1.7;">
+            ※ 건축사/건축사보는 기술사/기술자 단가 준용<br/>
+            ※ 산출 시점의 한국엔지니어링협회 최신 단가 적용 필수
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ref-block mb16">
+      <div class="ref-block-header">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        감리비 산정 방식의 구조적 차이와 선택 기준
+      </div>
+      <div class="ref-block-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div style="background:#f8fafd;border:1.5px solid #dde3ed;border-radius:10px;padding:16px;">
+            <div style="font-size:12px;font-weight:800;color:#4a5568;margin-bottom:12px;text-align:center;">요율 방식</div>
+            <div class="ref-item"><span style="font-size:11px;font-weight:700;color:#64748b;">적용 대상</span><span style="font-size:11px;color:#94a3b8;max-width:55%;text-align:right;">공공기관 발주사업, 비상주 감리</span></div>
+            <div class="ref-item"><span style="font-size:11px;font-weight:700;color:#64748b;">산정 원리</span><span style="font-size:11px;color:#94a3b8;max-width:55%;text-align:right;">예정 공사비 × 국토부 고시 요율</span></div>
+            <div class="ref-item"><span style="font-size:11px;font-weight:700;color:#64748b;">조정 범위</span><span style="font-size:11px;color:#94a3b8;max-width:55%;text-align:right;">산출 요율의 ±10% 범위 내</span></div>
+            <div class="ref-item" style="border:none;"><span style="font-size:11px;font-weight:700;color:#64748b;">실무 특징</span><span style="font-size:11px;color:#94a3b8;max-width:55%;text-align:right;">단순하지만 현장 변수 대응 어려움</span></div>
+          </div>
+          <div style="background:#fff8f5;border:2px solid #f97316;border-radius:10px;padding:16px;position:relative;">
+            <div style="position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:#f97316;color:#fff;font-size:9px;font-weight:800;padding:2px 12px;border-radius:20px;white-space:nowrap;">민간 사실상 표준</div>
+            <div style="font-size:12px;font-weight:800;color:#ea580c;margin-bottom:12px;text-align:center;">실비정액가산 방식 ✓</div>
+            <div class="ref-item"><span style="font-size:11px;font-weight:700;color:#78350f;">적용 대상</span><span style="font-size:11px;color:#92400e;max-width:55%;text-align:right;">민간 해체공사, 상주 감리 현장</span></div>
+            <div class="ref-item"><span style="font-size:11px;font-weight:700;color:#78350f;">산정 원리</span><span style="font-size:11px;color:#92400e;max-width:55%;text-align:right;">실제 투입 기술자 인건비 + 직접경비 합산</span></div>
+            <div class="ref-item"><span style="font-size:11px;font-weight:700;color:#78350f;">조정 범위</span><span style="font-size:11px;color:#92400e;max-width:55%;text-align:right;">법정 제경비 및 기술료 요율 구간 내</span></div>
+            <div class="ref-item" style="border:none;"><span style="font-size:11px;font-weight:700;color:#78350f;">실무 특징</span><span style="font-size:11px;color:#92400e;max-width:55%;text-align:right;">정량적이고 투명한 예산 수립 가능</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;" class="mb16">
+      <div class="ref-block">
+        <div class="ref-block-header">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          실비정액가산 방식의 4대 구성 요소
+        </div>
+        <div class="ref-block-body">
+          <div style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid #eef1f6;">
+            <div style="width:24px;height:24px;border-radius:6px;background:#0c4da2;color:#fff;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">①</div>
+            <div><div style="font-size:12px;font-weight:800;color:#1a2744;margin-bottom:2px;">직접인건비</div><div style="font-size:11px;color:#4a5568;line-height:1.6;">투입 인원수 × 기술 등급별 노임단가</div><div style="font-size:10px;color:#0c4da2;font-weight:700;margin-top:3px;">※ 기준: 한국엔지니어링협회 매년 공표 단가 적용</div></div>
+          </div>
+          <div style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid #eef1f6;">
+            <div style="width:24px;height:24px;border-radius:6px;background:#0c4da2;color:#fff;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">②</div>
+            <div><div style="font-size:12px;font-weight:800;color:#1a2744;margin-bottom:2px;">제경비</div><div style="font-size:11px;color:#4a5568;line-height:1.6;">감리 법인의 행정, 경리 급여 등 간접비용</div><div style="font-size:10px;color:#0c4da2;font-weight:700;margin-top:3px;">※ 법정 기준: 직접인건비의 <strong>110% ~ 120%</strong> 범위 내</div></div>
+          </div>
+          <div style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid #eef1f6;">
+            <div style="width:24px;height:24px;border-radius:6px;background:#64748b;color:#fff;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">③</div>
+            <div><div style="font-size:12px;font-weight:800;color:#1a2744;margin-bottom:2px;">직접경비</div><div style="font-size:11px;color:#4a5568;line-height:1.6;">숙박비, 인쇄비, 사무공간 임대료, 교통비 등 실제 소요 비용</div><div style="font-size:10px;color:#64748b;font-weight:700;margin-top:3px;">※ 현재는 「실비 정산 원칙」 협의 (일괄 10만원 폐지)</div></div>
+          </div>
+          <div style="display:flex;gap:12px;padding:10px 0;">
+            <div style="width:24px;height:24px;border-radius:6px;background:#e63312;color:#fff;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">④</div>
+            <div><div style="font-size:12px;font-weight:800;color:#1a2744;margin-bottom:2px;">기술료</div><div style="font-size:11px;color:#4a5568;line-height:1.6;">감리자의 기술 사용 및 이윤</div><div style="font-size:10px;color:#e63312;font-weight:700;margin-top:3px;">※ 법정 기준: (직접인건비 + 제경비) 합계액의 <strong>20% ~ 40%</strong> 범위 내</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-stack">
+        <div class="ref-block">
+          <div class="ref-block-header">
+            <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            법정 요율 범위 (현재 적용값)
+          </div>
+          <div class="ref-block-body">
+            <div style="margin-bottom:16px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                <span style="font-size:12px;font-weight:800;color:#1a2744;">제경비율</span>
+                <span style="font-size:14px;font-weight:900;color:#0c4da2;" id="ref-overheadVal">110%</span>
+              </div>
+              <div style="position:relative;height:10px;background:#dde3ed;border-radius:5px;">
+                <div id="ref-overhead-bar" style="position:absolute;left:0;top:0;height:10px;border-radius:5px;background:linear-gradient(90deg,#0c4da2,#1565c0);width:0%;transition:width .2s;"></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:10px;color:#94a3b8;margin-top:4px;"><span>110%</span><span>120%</span></div>
+              <div style="font-size:10px;color:#64748b;margin-top:4px;" id="ref-overhead-sub">직접인건비 0원 × 110% = <strong style="color:#0c4da2;">0원</strong></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                <span style="font-size:12px;font-weight:800;color:#1a2744;">기술료율</span>
+                <span style="font-size:14px;font-weight:900;color:#e63312;" id="ref-techFeeVal">20%</span>
+              </div>
+              <div style="position:relative;height:10px;background:#dde3ed;border-radius:5px;">
+                <div id="ref-techfee-bar" style="position:absolute;left:0;top:0;height:10px;border-radius:5px;background:linear-gradient(90deg,#e63312,#f97316);width:0%;transition:width .2s;"></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:10px;color:#94a3b8;margin-top:4px;"><span>20%</span><span>40%</span></div>
+              <div style="font-size:10px;color:#64748b;margin-top:4px;" id="ref-techfee-sub">(인건비+제경비) 0원 × 20% = <strong style="color:#e63312;">0원</strong></div>
+            </div>
+          </div>
+        </div>
+        <div class="ref-block">
+          <div class="ref-block-header">
+            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            감리원 법정 배치 기준
+          </div>
+          <div class="ref-block-body">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+              <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:12px;text-align:center;">
+                <div style="font-size:10px;font-weight:700;color:#1d4ed8;margin-bottom:4px;">해체 허가 대상</div>
+                <div style="font-size:11px;color:#1e40af;line-height:1.6;">상주 감리 의무<br/>(전체 공사 기간)</div>
+              </div>
+              <div style="background:#f8fafd;border:1px solid #dde3ed;border-radius:8px;padding:12px;text-align:center;">
+                <div style="font-size:10px;font-weight:700;color:#64748b;margin-bottom:4px;">해체 신고 대상</div>
+                <div style="font-size:11px;color:#4a5568;line-height:1.6;">원칙적 비상주 감리<br/>(예외 있음)</div>
+              </div>
+            </div>
+            <div class="ref-item"><span style="font-size:11px;color:#4a5568;font-weight:600;">연면적 3,000㎡ 미만</span><span style="font-size:11px;font-weight:800;color:#0c4da2;">1명 이상 배치</span></div>
+            <div class="ref-item"><span style="font-size:11px;color:#4a5568;font-weight:600;">연면적 3,000㎡ 이상</span><span style="font-size:11px;font-weight:800;color:#0c4da2;">2명 이상 배치 (주+보조)</span></div>
+            <div style="margin-top:8px;background:#fff8f5;border:1px solid #fdba74;border-radius:6px;padding:8px 10px;font-size:10px;color:#92400e;line-height:1.7;">⚠ 다중이용시설(버스정류장·횡단보도 등) 인접 또는 폭 15m 이상 도로 인접 시 → 허가권자 판단 하에 상주 감리로 강제 전환 가능</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;" class="mb16">
+      <div class="ref-block">
+        <div class="ref-block-header">
+          <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          인일수(Man-days) 산정의 치명적 함정
+        </div>
+        <div class="ref-block-body">
+          <div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #eef1f6;">
+            <div style="background:#0c4da2;color:#fff;font-size:9px;font-weight:800;padding:3px 7px;border-radius:4px;height:fit-content;white-space:nowrap;margin-top:2px;">Phase 1</div>
+            <div><div style="font-size:11px;font-weight:800;color:#1a2744;margin-bottom:2px;">사전 검토 (착수 전)</div><div style="font-size:11px;color:#4a5568;line-height:1.6;">해체계획서 검토, 구조 안전성 사전 점검, 현장 여건 확인</div><div style="font-size:10px;color:#0c4da2;font-weight:700;margin-top:2px;">[ 필수 투입 일수 반영 ]</div></div>
+          </div>
+          <div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #eef1f6;">
+            <div style="background:#e63312;color:#fff;font-size:9px;font-weight:800;padding:3px 7px;border-radius:4px;height:fit-content;white-space:nowrap;margin-top:2px;">Phase 2</div>
+            <div><div style="font-size:11px;font-weight:800;color:#1a2744;margin-bottom:2px;">본 공사 (철거 중)</div><div style="font-size:11px;color:#4a5568;line-height:1.6;">실제 장비 투입 및 해체공사 진행 기간</div><div style="font-size:10px;color:#e63312;font-weight:700;margin-top:2px;">[ 눈에 보이는 주요 상주 기간 ]</div></div>
+          </div>
+          <div style="display:flex;gap:10px;padding:10px 0;">
+            <div style="background:#0c4da2;color:#fff;font-size:9px;font-weight:800;padding:3px 7px;border-radius:4px;height:fit-content;white-space:nowrap;margin-top:2px;">Phase 3</div>
+            <div><div style="font-size:11px;font-weight:800;color:#1a2744;margin-bottom:2px;">사후 정리 (공사 종료 후)</div><div style="font-size:11px;color:#4a5568;line-height:1.6;">완료보고서 작성, 폐기물 처리 확인, 관할관청 제출 자료 정리</div><div style="font-size:10px;color:#0c4da2;font-weight:700;margin-top:2px;">[ 필수 투입 일수 반영 ]</div></div>
+          </div>
+          <div style="margin-top:10px;background:#fff8f5;border:1.5px solid #f97316;border-radius:8px;padding:10px 12px;font-size:11px;color:#92400e;line-height:1.7;font-weight:600;text-align:center;">
+            직접인건비 계산 시 <span style="color:#e63312;font-weight:900;">Phase 2만</span> 산정하면 감리 법인의 막대한 영업 손실 발생.<br/>
+            <strong>3단계 전체를 합산해야 합법적인 총 투입 기간입니다.</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-stack">
+        <div class="ref-block">
+          <div class="ref-block-header">
+            <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            VAT 과세표준 주의사항
+          </div>
+          <div class="ref-block-body">
+            <div class="bad-box">
+              <div style="font-size:11px;font-weight:800;color:#ea580c;margin-bottom:6px;">⚠ 치명적 실수 — 잘못된 공식</div>
+              <div style="font-size:11px;color:#92400e;line-height:1.7;">손해배상보험료를 빼고 부가세를 계산하는 실무적 관행 → 과소 산출</div>
+            </div>
+            <div class="good-box">
+              <div style="font-size:11px;font-weight:800;color:#15803d;margin-bottom:6px;">✓ 올바른 공식</div>
+              <div style="font-size:11px;color:#166534;line-height:1.7;font-weight:600;">(직접비 + 제경비 + 기술료 + 손해배상보험료) × 10% = 부가가치세</div>
+              <div style="font-size:10px;color:#16a34a;margin-top:6px;">건설기술진흥법 기준: 발주자는 감리자의 손해배상보험(공제)료를 감리비에 계상해야 함</div>
+            </div>
+          </div>
+        </div>
+        <div class="ref-block">
+          <div class="ref-block-header">
+            <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            합법적 추가 실비 청구 조건 (Extra Charge)
+          </div>
+          <div class="ref-block-body">
+            <div style="font-size:11px;color:#4a5568;margin-bottom:10px;line-height:1.7;">단순 변심이 아닌, <span style="color:#e63312;font-weight:700;">객관적 상황 변화</span> 시 별도 청구 가능:</div>
+            <div style="display:flex;gap:8px;padding:7px 0;border-bottom:1px solid #eef1f6;align-items:flex-start;"><span style="background:#e63312;color:#fff;font-size:9px;font-weight:800;width:18px;height:18px;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">1</span><span style="font-size:11px;color:#4a5568;line-height:1.6;">설계도서와 현장 불일치로 인한 해체 계획 전면 재검토</span></div>
+            <div style="display:flex;gap:8px;padding:7px 0;border-bottom:1px solid #eef1f6;align-items:flex-start;"><span style="background:#e63312;color:#fff;font-size:9px;font-weight:800;width:18px;height:18px;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">2</span><span style="font-size:11px;color:#4a5568;line-height:1.6;">야간 및 휴일 공사 강행으로 인한 연장 근무</span></div>
+            <div style="display:flex;gap:8px;padding:7px 0;align-items:flex-start;"><span style="background:#e63312;color:#fff;font-size:9px;font-weight:800;width:18px;height:18px;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">3</span><span style="font-size:11px;color:#4a5568;line-height:1.6;">인근 민원 해결을 위한 기술 자문 및 추가 출장</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ref-block">
+      <div class="ref-block-header">
+        <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        완벽한 예산 수립을 위한 최종 점검 3원칙
+      </div>
+      <div class="ref-block-body">
+        <div class="three-col">
+          <div style="background:#f8fafd;border:1.5px solid #0c4da222;border-top:3px solid #0c4da2;border-radius:10px;padding:14px;">
+            <div style="font-size:20px;font-weight:900;color:#0c4da233;letter-spacing:-.02em;margin-bottom:4px;">01</div>
+            <div style="font-size:12px;font-weight:800;color:#1a2744;margin-bottom:10px;line-height:1.4;">계약 형태 및 대상의 명확화</div>
+            <div style="display:flex;gap:6px;font-size:11px;color:#4a5568;line-height:1.6;margin-bottom:6px;"><span style="color:#0c4da2;font-weight:700;flex-shrink:0;">·</span>해체 허가(상주) vs 신고(비상주) 여부를 최종 확인했는가?</div>
+            <div style="display:flex;gap:6px;font-size:11px;color:#4a5568;line-height:1.6;"><span style="color:#0c4da2;font-weight:700;flex-shrink:0;">·</span>신고 대상이더라도 다중이용시설 인접 등 예외 조항을 검토했는가?</div>
+          </div>
+          <div style="background:#f8fafd;border:1.5px solid #0c4da222;border-top:3px solid #0c4da2;border-radius:10px;padding:14px;">
+            <div style="font-size:20px;font-weight:900;color:#0c4da233;letter-spacing:-.02em;margin-bottom:4px;">02</div>
+            <div style="font-size:12px;font-weight:800;color:#1a2744;margin-bottom:10px;line-height:1.4;">당해 연도 최신 노임단가 적용</div>
+            <div style="display:flex;gap:6px;font-size:11px;color:#4a5568;line-height:1.6;"><span style="color:#0c4da2;font-weight:700;flex-shrink:0;">·</span>과거 데이터가 아닌, 산출 시점 기준 「한국엔지니어링협회」 공표 최신 단가를 직접인건비에 반영했는가?</div>
+          </div>
+          <div style="background:#fff8f5;border:1.5px solid #e6331222;border-top:3px solid #e63312;border-radius:10px;padding:14px;">
+            <div style="font-size:20px;font-weight:900;color:#e6331233;letter-spacing:-.02em;margin-bottom:4px;">03</div>
+            <div style="font-size:12px;font-weight:800;color:#1a2744;margin-bottom:10px;line-height:1.4;">법정 요율 가이드라인 엄수</div>
+            <div style="display:flex;gap:6px;font-size:11px;color:#4a5568;line-height:1.6;"><span style="color:#e63312;font-weight:700;flex-shrink:0;">·</span>임의 할인이 아닌, 제경비(110~120%)와 기술료(20~40%)의 법정 범위 내에서 내역서를 구성했는가?</div>
+          </div>
+        </div>
+        <div style="margin-top:14px;background:#0c4da2;border-radius:10px;padding:14px 20px;text-align:center;font-size:13px;font-weight:700;color:#fff;line-height:1.7;">
+          이 세 가지 기준점의 교차가 법적 분쟁을 예방하고, 안전한 해체공사를 보장하는 가장 확실한 설계도입니다.
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /tab-reference -->
+</main>
+
+<script>
+const RATES={professional:467217,special:373353,high:310884,middle:295138,low:235459,none:0};
+const GRADE_NAMES={professional:'건축사',special:'특급',high:'고급',middle:'중급',low:'초급',none:'-'};
+const fmt=v=>Math.floor(v).toLocaleString();
+const today='2026. 03. 13';
+
+/* 천단위 콤마 입력 포맷터 */
+function fmtInput(el){
+  const raw=el.value.replace(/[^0-9]/g,'');
+  el.value=raw===''?'':Number(raw).toLocaleString();
+}
+function rawNum(id){
+  return parseInt((document.getElementById(id).value||'0').replace(/,/g,''),10)||0;
+}
+
+function switchTab(id){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active',p.id==='tab-'+id));
+  if(id==='result') renderResult();
+}
+
+function updateSlider(id){
+  const el=document.getElementById(id);
+  const pct=(+el.value-+el.min)/(+el.max-+el.min)*100;
+  const color=id==='overheadRate'?'#0c4da2':'#e63312';
+  el.style.background=`linear-gradient(to right,${color} ${pct}%,#dde3ed ${pct}%)`;
+  document.getElementById(id+'Label').innerHTML=el.value+'<span style="font-size:12px;font-weight:600;color:#64748b;">%</span>';
+}
+
+function recalc(){
+  const g1=document.getElementById('sup1Grade').value;
+  const d1=+document.getElementById('sup1Days').value||0;
+  const g2=document.getElementById('sup2Grade').value;
+  const d2=g2==='none'?0:(+document.getElementById('sup2Days').value||0);
+  const oR=+document.getElementById('overheadRate').value;
+  const tR=+document.getElementById('techFeeRate').value;
+  const de=rawNum('directExpenses');
+  const ins=rawNum('insuranceFee');
+  const neg=rawNum('negoAmount');
+  const vat=document.getElementById('includeVat').checked;
+
+  document.getElementById('sup2Days').disabled=(g2==='none');
+
+  const l1=RATES[g1]*d1, l2=RATES[g2]*d2;
+  const labor=l1+l2;
+  const days=Math.max(d1,d2);
+  const over=labor*(oR/100);
+  const tech=(labor+over)*(tR/100);
+  const sub=labor+over+tech+de+ins-neg;
+  const vatAmt=vat?Math.floor(sub*.1):0;
+  const total=Math.floor((sub+vatAmt)/1000)*1000;
+
+  document.getElementById('banner-desc').textContent=`감리기간 ${days}일 · 감리원 ${g2==='none'?1:2}인 · ${vat?'VAT 포함':'VAT 제외'}`;
+  document.getElementById('banner-total').textContent='₩ '+fmt(total);
+  document.getElementById('banner-sub').textContent='공급가액 '+fmt(sub)+' 원';
+
+  /* 감리원 1 미니 계산 */
+  document.getElementById('mini1').innerHTML=`${fmt(RATES[g1])} × ${d1}일 = <strong>${fmt(l1)}</strong> 원`;
+
+  /* 감리원 2 미니 계산 */
+  const m2=document.getElementById('mini2');
+  if(g2==='none'){
+    m2.style.background='#f1f5f9'; m2.style.color='#94a3b8';
+    m2.innerHTML='미투입';
+  } else {
+    m2.style.background='#eff6ff'; m2.style.color='#1d4ed8';
+    m2.innerHTML=`${fmt(RATES[g2])} × ${d2}일 = <strong>${fmt(l2)}</strong> 원`;
+  }
+
+  document.getElementById('overheadCalc').textContent=`직접인건비 ${fmt(labor)}원 × ${oR}% → ${fmt(over)} 원`;
+  document.getElementById('techFeeCalc').textContent=`(인건비+제경비) ${fmt(labor+over)}원 × ${tR}% → ${fmt(tech)} 원`;
+
+  document.getElementById('ref-overheadVal').textContent=oR+'%';
+  document.getElementById('ref-overhead-bar').style.width=((oR-110)/10*100)+'%';
+  document.getElementById('ref-overhead-sub').innerHTML=`직접인건비 ${fmt(labor)}원 × ${oR}% = <strong style="color:#0c4da2;">${fmt(over)}원</strong>`;
+  document.getElementById('ref-techFeeVal').textContent=tR+'%';
+  document.getElementById('ref-techfee-bar').style.width=((tR-20)/20*100)+'%';
+  document.getElementById('ref-techfee-sub').innerHTML=`(인건비+제경비) ${fmt(labor+over)}원 × ${tR}% = <strong style="color:#e63312;">${fmt(tech)}원</strong>`;
+
+  window._s={g1,d1,g2,d2,oR,tR,de,ins,neg,vat,labor,over,tech,sub,vatAmt,total,days,l1,l2};
+}
+
+function renderResult(){
+  const s=window._s||{};
+  if(s.labor===undefined) return;
+  document.getElementById('r-projectName').textContent=document.getElementById('projectName').value;
+  document.getElementById('r-supervisorName').textContent=document.getElementById('supervisorName').value;
+  document.getElementById('r-reportDate').textContent=document.getElementById('reportDate').value;
+  document.getElementById('r-sign-name').textContent=document.getElementById('supervisorName').value;
+  document.getElementById('r-supervisors').textContent=GRADE_NAMES[s.g1]+' 1인'+(s.g2!=='none'?' / '+GRADE_NAMES[s.g2]+' 1인':'');
+  document.getElementById('r-days').textContent=s.days+'일';
+  const lDesc=`(${fmt(RATES[s.g1])}×${s.d1}일)`+(s.g2!=='none'?` + (${fmt(RATES[s.g2])}×${s.d2}일)`:'');
+  document.getElementById('r-labor-desc').textContent=lDesc;
+  document.getElementById('r-overhead-desc').textContent=`직접인건비의 ${s.oR}%`;
+  document.getElementById('r-techfee-desc').textContent=`(인건비+제경비)의 ${s.tR}%`;
+  document.getElementById('r-vat-desc').textContent=s.vat?'공급가액의 10%':'해당없음';
+  document.getElementById('r-directLabor').textContent=fmt(s.labor);
+  document.getElementById('r-overhead').textContent=fmt(s.over);
+  document.getElementById('r-techFee').textContent=fmt(s.tech);
+  document.getElementById('r-directExp').textContent=fmt(s.de);
+  document.getElementById('r-insurance').textContent=fmt(s.ins);
+  document.getElementById('r-nego').textContent='- '+fmt(s.neg);
+  document.getElementById('r-subtotal').textContent=fmt(s.sub);
+  document.getElementById('r-vat').textContent=fmt(s.vatAmt);
+  document.getElementById('r-total').textContent=fmt(s.total);
+  document.getElementById('r-date2').textContent=document.getElementById('reportDate').value;
+}
+
+function doPrint(){
+  // 1) 산출서 데이터 갱신
+  renderResult();
+
+  // 2) 산출서 탭을 반드시 표시
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab==='result'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active',p.id==='tab-result'));
+
+  // 3) 브라우저 layout flush 후 인쇄 다이얼로그 호출
+  setTimeout(function(){
+    window.focus();
+    window.print();
+  }, 400);
+}
+
+updateSlider('overheadRate');
+updateSlider('techFeeRate');
+recalc();
+</script>
+
+<!-- ═══ PWA 설치 배너 ═══ -->
+<div id="pwa-banner" class="pwa-install-banner" style="display:none;">
+  <img src="icons/icon-192.png" alt="앱"/>
+  <div class="pwa-text">
+    <div class="pwa-title">홈 화면에 설치하시겠습니까?</div>
+    <div class="pwa-desc">오프라인에서도 사용 가능합니다</div>
+  </div>
+  <div class="pwa-btns">
+    <button class="btn-dismiss" onclick="document.getElementById('pwa-banner').style.display='none'">닫기</button>
+    <button class="btn-install" id="pwa-install-btn">설치</button>
+  </div>
+</div>
+
+<!-- ═══ PWA 설치 프롬프트 + Service Worker 등록 ═══ -->
+<script>
+(function(){
+  var deferredPrompt=null;
+  window.addEventListener('beforeinstallprompt',function(e){
+    e.preventDefault();
+    deferredPrompt=e;
+    if(!window.matchMedia('(display-mode:standalone)').matches){
+      document.getElementById('pwa-banner').style.display='flex';
+    }
+  });
+  document.getElementById('pwa-install-btn').addEventListener('click',function(){
+    if(!deferredPrompt)return;
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(function(r){
+      if(r.outcome==='accepted')console.log('[PWA] 설치 완료');
+      deferredPrompt=null;
+      document.getElementById('pwa-banner').style.display='none';
+    });
+  });
+  if('serviceWorker' in navigator){
+    window.addEventListener('load',function(){
+      navigator.serviceWorker.register('./sw.js')
+        .then(function(r){console.log('[PWA] SW:',r.scope)})
+        .catch(function(e){console.warn('[PWA] SW 실패:',e)});
+    });
+  }
+})();
+</script>
+</body>
+</html>
