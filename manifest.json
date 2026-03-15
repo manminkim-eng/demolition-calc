@@ -1,20 +1,33 @@
 {
   "name": "건축물 해체감리 대가 산출기",
   "short_name": "해체감리",
-  "description": "건축물 해체감리 대가 산출기 - 건축물관리법 시행령 기준",
+  "description": "건축물관리법 시행령 기준 해체감리 대가 산출기 — ARCHITECT KIM MANMIN · Ver-1.5",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "orientation": "portrait-primary",
-  "background_color": "#f4f6f9",
+  "orientation": "any",
+  "background_color": "#0c4da2",
   "theme_color": "#0c4da2",
   "lang": "ko",
-  "categories": ["utilities", "productivity"],
+  "categories": ["utilities", "productivity", "business"],
   "icons": [
-    { "src": "icons/favicon-16.png",      "sizes": "16x16",   "type": "image/png" },
-    { "src": "icons/favicon-32.png",      "sizes": "32x32",   "type": "image/png" },
-    { "src": "icons/icon-192.png",        "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "icons/icon-512.png",        "sizes": "512x512", "type": "image/png", "purpose": "any" }
+    { "src": "icons/icon-72.png",  "sizes": "72x72",   "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-96.png",  "sizes": "96x96",   "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-128.png", "sizes": "128x128", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-144.png", "sizes": "144x144", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-152.png", "sizes": "152x152", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-384.png", "sizes": "384x384", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "shortcuts": [
+    {
+      "name": "대가 산출 시작",
+      "short_name": "산출 시작",
+      "description": "해체감리 대가 산출을 즉시 시작합니다",
+      "url": "./index.html",
+      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
+    }
   ],
   "prefer_related_applications": false
 }
