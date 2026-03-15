@@ -1,11 +1,11 @@
 /* ═══════════════════════════════════════════════════════════════
-   건축물 해체감리 대가 산출기 — Service Worker
-   건축물관리법 시행령 기준 | ARCHITECT KIM MANMIN · Ver-1.5
+   MANMIN 해체감리 산출기 — Service Worker
+   건축물관리법 시행령 기준 | ARCHITECT KIM MANMIN · Ver-1.0
    전략: Cache-First (로컬 자산) + Network-First (외부 CDN)
    ═══════════════════════════════════════════════════════════════ */
 
-const CACHE_NAME   = 'demolition-supervision-v1.5';
-const CDN_CACHE    = 'demolition-supervision-cdn-v1.5';
+const CACHE_NAME   = 'demolition-manmin-v1.0';
+const CDN_CACHE    = 'demolition-manmin-cdn-v1.0';
 const OFFLINE_PAGE = './index.html';
 
 /* ── 앱 셸: 설치 즉시 프리캐시 ─────────────────────────────── */
@@ -38,18 +38,12 @@ const CDN_ORIGINS = [
    INSTALL — 앱 셸 프리캐시
    ══════════════════════════════════════════════════════════════ */
 self.addEventListener('install', (event) => {
-  console.log('[SW] Install — 앱 셸 프리캐시 시작');
+  console.log('[SW] Install — 프리캐시 시작');
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => cache.addAll(APP_SHELL))
-      .then(() => {
-        console.log('[SW] 프리캐시 완료 — skipWaiting');
-        return self.skipWaiting();
-      })
-      .catch((err) => {
-        console.warn('[SW] 프리캐시 일부 실패 (계속 진행):', err);
-        return self.skipWaiting();
-      })
+      .then(() => { console.log('[SW] 프리캐시 완료'); return self.skipWaiting(); })
+      .catch((err) => { console.warn('[SW] 프리캐시 일부 실패:', err); return self.skipWaiting(); })
   );
 });
 
@@ -57,16 +51,12 @@ self.addEventListener('install', (event) => {
    ACTIVATE — 구버전 캐시 삭제
    ══════════════════════════════════════════════════════════════ */
 self.addEventListener('activate', (event) => {
-  console.log('[SW] Activate — 구버전 캐시 정리');
   event.waitUntil(
     caches.keys()
-      .then((keys) => {
-        const VALID = [CACHE_NAME, CDN_CACHE];
-        return Promise.all(
-          keys.filter((k) => !VALID.includes(k))
-              .map((k) => { console.log('[SW] 삭제:', k); return caches.delete(k); })
-        );
-      })
+      .then((keys) => Promise.all(
+        keys.filter((k) => ![CACHE_NAME, CDN_CACHE].includes(k))
+            .map((k) => { console.log('[SW] 삭제:', k); return caches.delete(k); })
+      ))
       .then(() => self.clients.claim())
   );
 });
@@ -87,15 +77,13 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(isCDN ? networkFirstCDN(request) : cacheFirstLocal(request));
 });
 
-/* ── Cache-First (로컬 자산) ─────────────────────────────────── */
 async function cacheFirstLocal(request) {
   const cached = await caches.match(request);
   if (cached) return cached;
   try {
     const res = await fetch(request);
     if (res && res.status === 200 && res.type !== 'opaque') {
-      const cache = await caches.open(CACHE_NAME);
-      cache.put(request, res.clone());
+      (await caches.open(CACHE_NAME)).put(request, res.clone());
     }
     return res;
   } catch (_) {
@@ -103,53 +91,35 @@ async function cacheFirstLocal(request) {
       const offline = await caches.match(OFFLINE_PAGE);
       if (offline) return offline;
     }
-    return new Response(
-      '오프라인 상태입니다. 앱을 먼저 온라인에서 한 번 열어주세요.',
-      { status: 503, headers: { 'Content-Type': 'text/plain; charset=utf-8' } }
-    );
+    return new Response('오프라인 상태입니다. 앱을 먼저 온라인에서 한 번 열어주세요.',
+      { status: 503, headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
   }
 }
 
-/* ── Network-First (CDN 자산) ────────────────────────────────── */
 async function networkFirstCDN(request) {
   try {
     const res = await fetch(request);
-    if (res && res.status === 200) {
-      const cache = await caches.open(CDN_CACHE);
-      cache.put(request, res.clone());
-    }
+    if (res && res.status === 200) (await caches.open(CDN_CACHE)).put(request, res.clone());
     return res;
   } catch (_) {
-    const cached = await caches.match(request, { cacheName: CDN_CACHE });
-    return cached || new Response('', { status: 503 });
+    return (await caches.match(request, { cacheName: CDN_CACHE })) || new Response('', { status: 503 });
   }
 }
 
 /* ══════════════════════════════════════════════════════════════
-   MESSAGE — 클라이언트 명령 수신
+   MESSAGE / PUSH
    ══════════════════════════════════════════════════════════════ */
 self.addEventListener('message', (event) => {
   if (event.data?.action === 'SKIP_WAITING') self.skipWaiting();
-  if (event.data?.action === 'CLEAR_CACHE') {
-    caches.keys()
-      .then((keys) => Promise.all(keys.map((k) => caches.delete(k))))
-      .then(() => console.log('[SW] 전체 캐시 삭제 완료'));
-  }
+  if (event.data?.action === 'CLEAR_CACHE')
+    caches.keys().then((keys) => Promise.all(keys.map((k) => caches.delete(k))));
 });
 
-/* ══════════════════════════════════════════════════════════════
-   PUSH — 알림 확장용 (현재 미사용)
-   ══════════════════════════════════════════════════════════════ */
 self.addEventListener('push', (event) => {
-  const data = event.data?.json() ?? {
-    title: '해체감리 대가 산출기',
-    body: '업데이트가 있습니다.',
-  };
+  const data = event.data?.json() ?? { title: '해체감리 산출기', body: '업데이트가 있습니다.' };
   event.waitUntil(
     self.registration.showNotification(data.title, {
-      body: data.body,
-      icon: './icons/icon-192.png',
-      badge: './icons/icon-72.png',
+      body: data.body, icon: './icons/icon-192.png', badge: './icons/icon-72.png',
     })
   );
 });
