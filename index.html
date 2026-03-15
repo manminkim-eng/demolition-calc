@@ -4,6 +4,17 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>해체감리 산출기 [MANMIN-Ver1.0]</title>
+
+<!-- ═══ PWA 설정 ═══ -->
+<link rel="manifest" href="manifest.json"/>
+<meta name="theme-color" content="#0c4da2"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+<meta name="apple-mobile-web-app-title" content="해체감리"/>
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png"/>
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png"/>
+<link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png"/>
+
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -117,7 +128,7 @@ body{font-family:'Pretendard',sans-serif;background:#f4f6f9;color:#1a2744;min-he
 .vat-toggle{display:flex;align-items:center;gap:10px;padding:11px 13px;background:#f8fafd;border:1.5px solid #dde3ed;border-radius:8px;cursor:pointer;margin-top:12px;transition:border-color .18s;}
 .vat-toggle:hover{border-color:#0c4da2;}
 .vat-toggle input[type=checkbox]{accent-color:#0c4da2;width:16px;height:16px;cursor:pointer;flex-shrink:0;}
-.vat-toggle label{font-size:7px;font-weight:800;color:#1a2744;cursor:pointer;}
+.vat-toggle label{font-size:7px;font-weight:800;color:#1a2744;cursor:pointer;font-family:'Pretendard',sans-serif;letter-spacing:.02em;}
 
 /* ══ A4 PREVIEW ══ */
 .result-wrap{display:flex;justify-content:center;padding:24px 0;overflow-x:auto;background:#e8ecf1;-webkit-overflow-scrolling:touch;}
@@ -405,6 +416,19 @@ body{font-family:'Pretendard',sans-serif;background:#f4f6f9;color:#1a2744;min-he
 @media(min-width:1025px){
   .fml-box{max-width:820px;}
 }
+
+/* ══ PWA 설치 배너 ══ */
+.pwa-install-banner{position:fixed;bottom:16px;left:16px;right:16px;z-index:9999;background:linear-gradient(135deg,#0c4da2 0%,#0a3270 100%);border:1px solid rgba(255,255,255,.2);border-radius:16px;padding:16px;display:flex;align-items:center;gap:12px;box-shadow:0 8px 32px rgba(0,0,0,.3);animation:pwaSlideUp .4s ease-out;}
+@keyframes pwaSlideUp{from{transform:translateY(100%);opacity:0}to{transform:translateY(0);opacity:1}}
+.pwa-install-banner img{width:48px;height:48px;border-radius:12px;flex-shrink:0;box-shadow:0 4px 12px rgba(0,0,0,.3);}
+.pwa-banner-text{flex:1;min-width:0;}
+.pwa-banner-title{color:#fff;font-size:13px;font-weight:800;}
+.pwa-banner-desc{color:#93c5fd;font-size:10px;font-weight:600;margin-top:4px;}
+.pwa-banner-btns{display:flex;gap:8px;flex-shrink:0;}
+.pwa-btn-dismiss{color:rgba(255,255,255,.6);font-size:11px;font-weight:700;padding:8px 12px;border:none;background:transparent;cursor:pointer;border-radius:8px;font-family:inherit;}
+.pwa-btn-install{background:#fff;color:#0c4da2;font-size:11px;font-weight:900;padding:8px 16px;border:none;border-radius:8px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.2);font-family:inherit;}
+@media print{.pwa-install-banner{display:none!important;}}
+@media(max-width:480px){.pwa-banner-btns{flex-direction:column;gap:6px;}.pwa-btn-dismiss,.pwa-btn-install{text-align:center;}}
 </style>
 </head>
 <body>
@@ -891,7 +915,7 @@ body{font-family:'Pretendard',sans-serif;background:#f4f6f9;color:#1a2744;min-he
         </div>
         <div class="a4-footer">
           <div class="a4-bot-bar"></div>
-          <div class="a4-footer-ver">MANMIN-Ver1.0</div>
+          <div class="a4-footer-ver">해체감리 산출기 [MANMIN-Ver1.0] · 2026년 기준</div>
         </div>
       </div>
     </div>
@@ -1133,6 +1157,49 @@ document.addEventListener('keydown',function(e){
 updateSlider('overheadRate');
 updateSlider('techFeeRate');
 recalc();
+</script>
+
+<!-- ═══ PWA 설치 배너 ═══ -->
+<div id="pwa-banner" class="pwa-install-banner" style="display:none;">
+  <img src="icons/icon-192.png" alt="해체감리 산출기"/>
+  <div class="pwa-banner-text">
+    <div class="pwa-banner-title">홈 화면에 설치하시겠습니까?</div>
+    <div class="pwa-banner-desc">오프라인에서도 사용 가능합니다</div>
+  </div>
+  <div class="pwa-banner-btns">
+    <button class="pwa-btn-dismiss" onclick="document.getElementById('pwa-banner').style.display='none'">닫기</button>
+    <button class="pwa-btn-install" id="pwa-install-btn">설치</button>
+  </div>
+</div>
+
+<!-- ═══ PWA 설치 프롬프트 + Service Worker 등록 ═══ -->
+<script>
+(function(){
+  var deferredPrompt=null;
+  window.addEventListener('beforeinstallprompt',function(e){
+    e.preventDefault();
+    deferredPrompt=e;
+    if(!window.matchMedia('(display-mode:standalone)').matches){
+      document.getElementById('pwa-banner').style.display='flex';
+    }
+  });
+  document.getElementById('pwa-install-btn').addEventListener('click',function(){
+    if(!deferredPrompt)return;
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(function(r){
+      if(r.outcome==='accepted')console.log('[PWA] 설치 완료');
+      deferredPrompt=null;
+      document.getElementById('pwa-banner').style.display='none';
+    });
+  });
+  if('serviceWorker' in navigator){
+    window.addEventListener('load',function(){
+      navigator.serviceWorker.register('./sw.js')
+        .then(function(r){console.log('[PWA] SW 등록 완료:',r.scope);})
+        .catch(function(e){console.warn('[PWA] SW 등록 실패:',e);});
+    });
+  }
+})();
 </script>
 </body>
 </html>
