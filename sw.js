@@ -4,8 +4,8 @@
    전략: Cache-First (로컬 자산) + Network-First (외부 CDN)
    ═══════════════════════════════════════════════════════════════ */
 
-const CACHE_NAME   = 'demolition-manmin-v1.0';
-const CDN_CACHE    = 'demolition-manmin-cdn-v1.0';
+const CACHE_NAME   = 'demolition-v1.0';
+const CDN_CACHE    = 'demolition-cdn-v1.0';
 const OFFLINE_PAGE = './index.html';
 
 /* ── 앱 셸: 설치 즉시 프리캐시 ─────────────────────────────── */
@@ -35,7 +35,7 @@ const CDN_ORIGINS = [
 ];
 
 /* ══════════════════════════════════════════════════════════════
-   INSTALL — 앱 셸 프리캐시
+   INSTALL
    ══════════════════════════════════════════════════════════════ */
 self.addEventListener('install', (event) => {
   console.log('[SW] Install — 프리캐시 시작');
@@ -48,21 +48,21 @@ self.addEventListener('install', (event) => {
 });
 
 /* ══════════════════════════════════════════════════════════════
-   ACTIVATE — 구버전 캐시 삭제
+   ACTIVATE
    ══════════════════════════════════════════════════════════════ */
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys()
       .then((keys) => Promise.all(
         keys.filter((k) => ![CACHE_NAME, CDN_CACHE].includes(k))
-            .map((k) => { console.log('[SW] 삭제:', k); return caches.delete(k); })
+            .map((k) => { console.log('[SW] 구버전 삭제:', k); return caches.delete(k); })
       ))
       .then(() => self.clients.claim())
   );
 });
 
 /* ══════════════════════════════════════════════════════════════
-   FETCH — 요청 라우팅
+   FETCH
    ══════════════════════════════════════════════════════════════ */
 self.addEventListener('fetch', (event) => {
   const { request } = event;
@@ -73,7 +73,6 @@ self.addEventListener('fetch', (event) => {
   const isCDN = CDN_ORIGINS.some(
     (o) => url.origin === new URL(o).origin || request.url.startsWith(o)
   );
-
   event.respondWith(isCDN ? networkFirstCDN(request) : cacheFirstLocal(request));
 });
 
@@ -82,9 +81,8 @@ async function cacheFirstLocal(request) {
   if (cached) return cached;
   try {
     const res = await fetch(request);
-    if (res && res.status === 200 && res.type !== 'opaque') {
+    if (res && res.status === 200 && res.type !== 'opaque')
       (await caches.open(CACHE_NAME)).put(request, res.clone());
-    }
     return res;
   } catch (_) {
     if (request.headers.get('accept')?.includes('text/html')) {

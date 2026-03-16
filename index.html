@@ -130,8 +130,29 @@ body{font-family:'Pretendard',sans-serif;background:#f4f6f9;color:#1a2744;min-he
 .vat-toggle input[type=checkbox]{accent-color:#0c4da2;width:16px;height:16px;cursor:pointer;flex-shrink:0;}
 .vat-toggle label{font-size:7px;font-weight:800;color:#1a2744;cursor:pointer;font-family:'Pretendard',sans-serif;letter-spacing:.02em;}
 
-/* ══ A4 PREVIEW ══ */
-.result-wrap{display:flex;justify-content:center;padding:24px 0;overflow-x:auto;background:#e8ecf1;-webkit-overflow-scrolling:touch;}
+/* ══ A4 미리보기 모바일 안내 배너 ══ */
+.a4-mobile-hint{
+  display:none;
+  align-items:center;gap:6px;
+  background:#eff6ff;border-bottom:1px solid #bfdbfe;
+  padding:8px 14px;font-size:10px;font-weight:600;color:#1e40af;
+}
+@media(max-width:860px){.a4-mobile-hint{display:flex;}}
+@media print{.a4-mobile-hint{display:none!important;}}
+
+/* ══ A4 PREVIEW — 완전 반응형 스케일링 ══ */
+.result-wrap{
+  display:flex;justify-content:center;align-items:flex-start;
+  padding:24px 12px;
+  overflow:hidden;            /* 가로 스크롤 제거 */
+  background:#e8ecf1;
+  min-height:100px;           /* JS가 동적으로 보정 */
+}
+/* transform 기준점 래퍼 */
+.a4-scale-wrap{
+  transform-origin:top center;
+  flex-shrink:0;
+}
 .a4-page{font-family:'Pretendard',sans-serif;width:210mm;height:297mm;min-height:297mm;padding:12mm 18mm 10mm 18mm;background:#fff;color:#1a1a1a;box-sizing:border-box;box-shadow:0 6px 40px rgba(0,0,0,.18);border:1px solid #c8d0dc;display:flex;flex-direction:column;overflow:hidden;flex-shrink:0;}
 .a4-top-bar{height:6px;background:#0c4da2;border-radius:2px;margin-bottom:16px;flex-shrink:0;}
 .a4-title{text-align:center;margin-bottom:14px;flex-shrink:0;}
@@ -176,7 +197,8 @@ body{font-family:'Pretendard',sans-serif;background:#f4f6f9;color:#1a2744;min-he
   .main-wrap{padding:0;margin:0;}
   .main-wrap>.tab-panel{display:none!important;}
   .main-wrap>#tab-result{display:block!important;padding:0;margin:0;}
-  .result-wrap{padding:0;margin:0;display:block;overflow:visible;background:#fff;}
+  .result-wrap{padding:0;margin:0;display:block;overflow:visible;background:#fff;min-height:unset!important;}
+  .a4-scale-wrap{transform:none!important;width:auto!important;}
   .a4-page{border:none!important;box-shadow:none!important;margin:0!important;width:210mm!important;height:297mm!important;min-height:unset!important;padding:12mm 18mm 10mm 18mm!important;}
   .fml-fab{display:none!important;}
   @page{size:A4 portrait;margin:0;}
@@ -874,7 +896,13 @@ body{font-family:'Pretendard',sans-serif;background:#f4f6f9;color:#1a2744;min-he
 
   <!-- ══════════ RESULT TAB ══════════ -->
   <div id="tab-result" class="tab-panel">
-    <div class="result-wrap">
+    <!-- 모바일 안내 힌트 -->
+    <div class="a4-mobile-hint no-print">
+      <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="17" r="1"/></svg>
+      A4 전체를 화면 크기에 맞게 자동 축소 표시합니다 · 인쇄 시 실제 A4 크기로 출력됩니다
+    </div>
+    <div class="result-wrap" id="result-wrap">
+      <div class="a4-scale-wrap" id="a4-scale-wrap">
       <div class="a4-page" id="print-area">
         <div class="a4-top-bar"></div>
         <div class="a4-title"><h2>건축물 해체공사 감리 대가 산출서</h2></div>
@@ -918,6 +946,7 @@ body{font-family:'Pretendard',sans-serif;background:#f4f6f9;color:#1a2744;min-he
           <div class="a4-footer-ver">해체감리 산출기 [MANMIN-Ver1.0] · 2026년 기준</div>
         </div>
       </div>
+      </div><!-- /a4-scale-wrap -->
     </div>
   </div><!-- /tab-result -->
 
@@ -1157,6 +1186,47 @@ document.addEventListener('keydown',function(e){
 updateSlider('overheadRate');
 updateSlider('techFeeRate');
 recalc();
+
+/* ════ A4 반응형 스케일링 ════
+   A4 = 210mm = 794px (@96dpi) | 297mm = 1123px
+   모바일·태블릿에서 화면 폭에 맞춰 자동 축소,
+   인쇄 시에는 transform:none 으로 실제 A4 출력.
+*/
+function scaleA4(){
+  var wrap = document.getElementById('result-wrap');
+  var scaleEl = document.getElementById('a4-scale-wrap');
+  if(!wrap || !scaleEl) return;
+
+  var A4W = 794;   // px (210mm @ 96dpi)
+  var A4H = 1123;  // px (297mm @ 96dpi)
+  var H_PAD = 48;  // result-wrap 상하 패딩(24px×2)
+
+  var available = Math.min(wrap.clientWidth, window.innerWidth) - 24;
+
+  if(available >= A4W){
+    scaleEl.style.transform = '';
+    scaleEl.style.width = A4W + 'px';
+    wrap.style.minHeight = (A4H + H_PAD) + 'px';
+  } else {
+    var scale = available / A4W;
+    scaleEl.style.transform = 'scale(' + scale + ')';
+    scaleEl.style.width = A4W + 'px';
+    wrap.style.minHeight = Math.round(A4H * scale + H_PAD) + 'px';
+  }
+}
+
+/* 리사이즈 대응 */
+window.addEventListener('resize', scaleA4);
+
+/* switchTab 에 scaleA4 훅 */
+var _origSwitchTab = window.switchTab;
+window.switchTab = function(id){
+  _origSwitchTab(id);
+  if(id === 'result') setTimeout(scaleA4, 60);
+};
+
+/* 초기 적용 */
+setTimeout(scaleA4, 100);
 </script>
 
 <!-- ═══ PWA 설치 배너 ═══ -->
