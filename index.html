@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>해체감리 산출기 [MANMIN-Ver1.0]</title>
+<title>해체감리 산출기 [MANMIN-Ver3.0]</title>
 
 <!-- ═══ PWA 설정 ═══ -->
 <link rel="manifest" href="manifest.json"/>
@@ -473,7 +473,7 @@ body{font-family:'Pretendard',sans-serif;background:#f4f6f9;color:#1a2744;min-he
         </div>
         <div style="flex:1;min-width:0;">
           <div class="fml-hd-title" id="fmlTitle">해체감리비 산출 가이드</div>
-          <div class="fml-hd-sub">건축물 해체공사 · 실비정액가산방식 · MANMIN-Ver1.0</div>
+          <div class="fml-hd-sub">건축물 해체공사 · 실비정액가산방식 · MANMIN-Ver3.0</div>
         </div>
         <button class="fml-close-btn" onclick="closeModal()" aria-label="닫기">
           <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -646,7 +646,7 @@ body{font-family:'Pretendard',sans-serif;background:#f4f6f9;color:#1a2744;min-he
           <code class="fml-eq red" style="margin-top:8px;">(직접비 + 제경비 + 기술료) × 10%  ← ❌ 잘못된 공식</code>
         </div>
         <div class="fml-hi grn" style="margin-top:8px;">
-          <div style="font-size:11px;font-weight:800;color:#15803d;margin-bottom:6px;">✓ 올바른 공식 (건설기술진흥법 기준)</div>
+          <div style="font-size:11px;font-weight:800;color:#15803d;margin-bottom:6px;">✓ 올바른 공식 (관련 법령 및 세법 기준)</div>
           <code class="fml-eq grn">(직접비 + 제경비 + 기술료 + <b>손해배상보험료</b>) × 10%  ← ✅ 올바른 공식</code>
           <div class="fml-note" style="margin-top:6px;">발주자는 감리자의 손해배상보험(공제)료를 감리비에 <b>반드시 계상</b>해야 합니다.</div>
         </div>
@@ -710,7 +710,7 @@ body{font-family:'Pretendard',sans-serif;background:#f4f6f9;color:#1a2744;min-he
         <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
       </div>
       <div class="brand-texts">
-        <div class="brand-title">해체감리 산출기 [MANMIN-Ver1.0]</div>
+        <div class="brand-title">해체감리 산출기 [MANMIN-Ver3.0]</div>
         <div class="brand-sub">건축물관리법 · 국토교통부 고시 기준 · 2026년 기준노임 적용</div>
       </div>
     </div>
@@ -943,7 +943,7 @@ body{font-family:'Pretendard',sans-serif;background:#f4f6f9;color:#1a2744;min-he
         </div>
         <div class="a4-footer">
           <div class="a4-bot-bar"></div>
-          <div class="a4-footer-ver">해체감리 산출기 [MANMIN-Ver1.0] · 2026년 기준</div>
+          <div class="a4-footer-ver">해체감리 산출기 [MANMIN-Ver3.0] · 2026년 기준</div>
         </div>
       </div>
       </div><!-- /a4-scale-wrap -->
@@ -1010,7 +1010,7 @@ body{font-family:'Pretendard',sans-serif;background:#f4f6f9;color:#1a2744;min-he
         <div class="ref-block-header"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>VAT 과세표준 주의사항</div>
         <div class="ref-block-body">
           <div class="bad-box"><div style="font-size:11px;font-weight:800;color:#ea580c;margin-bottom:6px;">⚠ 잘못된 공식</div><div style="font-size:11px;color:#92400e;line-height:1.7;">손해배상보험료를 제외하고 부가세 계산 → 과소 산출</div></div>
-          <div class="good-box"><div style="font-size:11px;font-weight:800;color:#15803d;margin-bottom:6px;">✓ 올바른 공식</div><div style="font-size:11px;color:#166534;line-height:1.7;font-weight:600;">(직접비 + 제경비 + 기술료 + 손해배상보험료) × 10%</div><div style="font-size:10px;color:#16a34a;margin-top:6px;">건설기술진흥법 기준</div></div>
+          <div class="good-box"><div style="font-size:11px;font-weight:800;color:#15803d;margin-bottom:6px;">✓ 올바른 공식</div><div style="font-size:11px;color:#166534;line-height:1.7;font-weight:600;">(직접비 + 제경비 + 기술료 + 손해배상보험료) × 10%</div><div style="font-size:10px;color:#16a34a;margin-top:6px;">관련 세법 및 유권해석 기준</div></div>
         </div>
       </div>
     </div>
@@ -1094,8 +1094,8 @@ function recalc(){
   const l1=RATES[g1]*d1, l2=RATES[g2]*d2;
   const labor=l1+l2;
   const days=Math.max(d1,d2);
-  const over=labor*(oR/100);
-  const tech=(labor+over)*(tR/100);
+  const over=Math.floor(labor*(oR/100));
+  const tech=Math.floor((labor+over)*(tR/100));
   const sub=labor+over+tech+de+ins-neg;
   const vatAmt=vat?Math.floor(sub*.1):0;
   const total=Math.floor((sub+vatAmt)/1000)*1000;
