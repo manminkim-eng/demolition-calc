@@ -1,86 +1,73 @@
-/* ═══════════════════════════════════════════════════════════════
-   해체감리 산출기 — Service Worker
-   건축물관리법 시행령 기준 | ARCHITECT KIM MANMIN · Ver-3.0
-   전략: Cache-First (로컬 자산) + Network-First (외부 CDN)
-   ═══════════════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════
+   Service Worker — 해체감리 PWA
+   건축물관리법 해체감리 산출기 MANMIN-Ver3.0
+   ══════════════════════════════════════════════════ */
 
-const CACHE_NAME   = 'demolition-v3.0';
-const CDN_CACHE    = 'demolition-cdn-v3.0';
-const OFFLINE_PAGE = './index.html';
+const CACHE = '해체감리-v3.0';
+const OFFLINE = './offline.html';
 
-const APP_SHELL = [
-  './index.html','./manifest.json',
-  './icons/icon-72.png','./icons/icon-96.png','./icons/icon-128.png',
-  './icons/icon-144.png','./icons/icon-152.png','./icons/icon-192.png',
-  './icons/icon-384.png','./icons/icon-512.png',
-  './icons/apple-touch-icon.png','./icons/favicon-32.png','./icons/favicon-16.png',
+const PRECACHE = [
+  './',
+  './index.html',
+  './manifest.json',
+  './offline.html',
+  './favicon.ico',
+  './icons/icon-192x192.png',
+  './icons/icon-512x512.png',
+  './icons/icon-192.png',
 ];
 
-const CDN_ORIGINS = [
-  'https://fonts.googleapis.com','https://fonts.gstatic.com',
-  'https://cdn.jsdelivr.net','https://cdnjs.cloudflare.com','https://unpkg.com',
-];
-
-self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(c=>c.addAll(APP_SHELL))
-      .then(()=>{ console.log('[SW] 프리캐시 완료'); return self.skipWaiting(); })
-      .catch(()=>self.skipWaiting())
+self.addEventListener('install', e => {
+  e.waitUntil(
+    caches.open(CACHE)
+      .then(c => c.addAll(PRECACHE))
+      .then(() => self.skipWaiting())
   );
 });
 
-self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys().then(keys=>Promise.all(
-      keys.filter(k=>![CACHE_NAME,CDN_CACHE].includes(k)).map(k=>caches.delete(k))
-    )).then(()=>self.clients.claim())
+self.addEventListener('activate', e => {
+  e.waitUntil(
+    caches.keys()
+      .then(keys => Promise.all(
+        keys.filter(k => k !== CACHE).map(k => caches.delete(k))
+      ))
+      .then(() => self.clients.claim())
   );
 });
 
-self.addEventListener('fetch', (event) => {
-  const {request}=event;
-  if(request.method!=='GET'||!request.url.startsWith('http')) return;
-  const url=new URL(request.url);
-  const isCDN=CDN_ORIGINS.some(o=>url.origin===new URL(o).origin||request.url.startsWith(o));
-  event.respondWith(isCDN?networkFirstCDN(request):cacheFirstLocal(request));
+self.addEventListener('fetch', e => {
+  const req = e.request;
+  if (req.method !== 'GET') return;
+  const url = new URL(req.url);
+  const isCDN = ['cdn.jsdelivr.net','fonts.googleapis.com',
+    'fonts.gstatic.com','cdnjs.cloudflare.com','unpkg.com']
+    .some(d => url.hostname.includes(d));
+
+  if (req.mode === 'navigate') {
+    e.respondWith(fetch(req).catch(() => caches.match(OFFLINE)));
+    return;
+  }
+  e.respondWith(isCDN ? networkFirst(req) : staleWhileRevalidate(req));
 });
 
-async function cacheFirstLocal(request){
-  const cached=await caches.match(request);
-  if(cached) return cached;
-  try{
-    const res=await fetch(request);
-    if(res&&res.status===200&&res.type!=='opaque')
-      (await caches.open(CACHE_NAME)).put(request,res.clone());
+self.addEventListener('message', e => {
+  if (e.data?.type === 'SKIP_WAITING') self.skipWaiting();
+});
+
+async function networkFirst(req) {
+  try {
+    const res = await fetch(req);
+    if (res?.status === 200)(await caches.open(CACHE)).put(req, res.clone());
     return res;
-  }catch(_){
-    if(request.headers.get('accept')?.includes('text/html')){
-      const offline=await caches.match(OFFLINE_PAGE);
-      if(offline) return offline;
-    }
-    return new Response('오프라인 상태입니다.',{status:503,headers:{'Content-Type':'text/plain;charset=utf-8'}});
-  }
+  } catch { return caches.match(req); }
 }
 
-async function networkFirstCDN(request){
-  try{
-    const res=await fetch(request);
-    if(res&&res.status===200)(await caches.open(CDN_CACHE)).put(request,res.clone());
+async function staleWhileRevalidate(req) {
+  const c = await caches.open(CACHE);
+  const cached = await c.match(req);
+  const fresh = fetch(req).then(res => {
+    if (res?.status === 200 && res.type !== 'opaque') c.put(req, res.clone());
     return res;
-  }catch(_){
-    return (await caches.match(request,{cacheName:CDN_CACHE}))||new Response('',{status:503});
-  }
+  }).catch(() => cached);
+  return cached || fresh;
 }
-
-self.addEventListener('message',(event)=>{
-  if(event.data?.type==='SKIP_WAITING'||event.data?.action==='SKIP_WAITING') self.skipWaiting();
-  if(event.data?.action==='CLEAR_CACHE')
-    caches.keys().then(keys=>Promise.all(keys.map(k=>caches.delete(k))));
-});
-
-self.addEventListener('push',(event)=>{
-  const data=event.data?.json()??{title:'해체감리 산출기',body:'업데이트가 있습니다.'};
-  event.waitUntil(self.registration.showNotification(data.title,{
-    body:data.body,icon:'./icons/icon-192.png',badge:'./icons/icon-72.png'
-  }));
-});
