@@ -503,7 +503,8 @@ body{font-family:'Pretendard',sans-serif;background:#f4f6f9;color:#1a2744;min-he
         </button>
       </div>
       <div class="fml-itabs">
-        <button class="fml-itab on" data-sec="sec-method" onclick="switchSec(this)">산정 방식</button>
+        <button class="fml-itab on" data-sec="sec-howto" onclick="switchSec(this)">🗺️ 이용방법</button>
+        <button class="fml-itab" data-sec="sec-method" onclick="switchSec(this)">산정 방식</button>
         <button class="fml-itab" data-sec="sec-formula" onclick="switchSec(this)">계산식 단계</button>
         <button class="fml-itab" data-sec="sec-deploy" onclick="switchSec(this)">배치 기준</button>
         <button class="fml-itab" data-sec="sec-caution" onclick="switchSec(this)">핵심 주의사항</button>
@@ -513,8 +514,119 @@ body{font-family:'Pretendard',sans-serif;background:#f4f6f9;color:#1a2744;min-he
     <!-- 바디 -->
     <div class="fml-bd">
 
+      <!-- ── 탭 0: 이용방법 ── -->
+      <div class="fml-panel on" id="sec-howto">
+
+        <!-- 상단 배너 -->
+        <div style="background:linear-gradient(135deg,#081e44,#0c4da2);border-radius:13px;padding:16px 18px;margin-bottom:16px;">
+          <div style="font-size:13px;font-weight:900;color:#fbbf24;margin-bottom:5px;display:flex;align-items:center;gap:8px;">
+            <span style="font-size:20px;">🏗️</span> 해체감리 산출기 이용방법
+          </div>
+          <div style="font-size:10.5px;color:rgba(255,255,255,.7);line-height:1.65;">건축물관리법 · 국토교통부 고시 기준 · 실비정액가산방식 · 2026년 기준노임 적용<br>아래 순서대로 입력하면 감리비가 자동으로 산출됩니다.</div>
+        </div>
+
+        <!-- STEP 1 -->
+        <div style="display:flex;gap:11px;align-items:flex-start;background:#f8fafc;border:1.5px solid #e4e9f0;border-left:4px solid #0c4da2;border-radius:10px;padding:13px 14px;margin-bottom:9px;">
+          <div style="min-width:30px;height:30px;background:linear-gradient(135deg,#0c4da2,#0a3270);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#fff;flex-shrink:0;box-shadow:0 2px 8px rgba(12,77,162,.35);">1</div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:12px;font-weight:900;color:#0c4da2;margin-bottom:5px;">📋 감리 유형 선택</div>
+            <div style="font-size:10.5px;color:#374151;line-height:1.85;">
+              ① 상단 탭에서 <strong>「상주 감리」 또는 「비상주 감리」</strong>를 선택합니다.<br>
+              ② <strong>상주 감리:</strong> 해체 허가 대상 현장 — 3,000㎡ 미만(1명), 3,000㎡ 이상(주감리+보조감리 2명).<br>
+              ③ <strong>비상주 감리:</strong> 해체 신고 대상 현장 — 단, 도로·다중이용시설 인접 시 상주로 전환.
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div style="display:flex;gap:11px;align-items:flex-start;background:#fff7ed;border:1.5px solid #fed7aa;border-left:4px solid #f97316;border-radius:10px;padding:13px 14px;margin-bottom:9px;">
+          <div style="min-width:30px;height:30px;background:linear-gradient(135deg,#f97316,#ea580c);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#fff;flex-shrink:0;box-shadow:0 2px 8px rgba(249,115,22,.35);">2</div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:12px;font-weight:900;color:#c2410c;margin-bottom:5px;">👷 감리원 정보 입력</div>
+            <div style="font-size:10.5px;color:#374151;line-height:1.85;">
+              ① 감리원별 <strong>기술 등급</strong>(건축사/기술사·특급·고급·중급·초급)을 선택합니다.<br>
+              ② <strong>투입 일수</strong>를 입력합니다 — <strong>① 사전 검토 + ② 실제 해체 공사 + ③ 완료 보고·정리</strong> 3단계를 반드시 합산하세요.<br>
+              ③ 2인 배치 현장은 <strong>주감리원·보조감리원 각각</strong> 등급과 일수를 따로 입력합니다.
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 3 -->
+        <div style="display:flex;gap:11px;align-items:flex-start;background:#f0fdf4;border:1.5px solid #bbf7d0;border-left:4px solid #16a34a;border-radius:10px;padding:13px 14px;margin-bottom:9px;">
+          <div style="min-width:30px;height:30px;background:linear-gradient(135deg,#16a34a,#15803d);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#fff;flex-shrink:0;box-shadow:0 2px 8px rgba(22,163,74,.35);">3</div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:12px;font-weight:900;color:#15803d;margin-bottom:5px;">⚙️ 법정 요율 및 경비 설정</div>
+            <div style="font-size:10.5px;color:#374151;line-height:1.85;">
+              ① <strong>제경비율</strong> 슬라이더를 조정합니다 — 법정 범위 110% ~ 120% (직접인건비 기준).<br>
+              ② <strong>기술료율</strong> 슬라이더를 조정합니다 — 법정 범위 20% ~ 40% (인건비+제경비 기준).<br>
+              ③ <strong>직접경비</strong>(숙박·교통·인쇄비 등)와 <strong>손해배상보험료</strong>를 실비 기준으로 입력합니다.<br>
+              ④ 필요 시 <strong>협의 차감액(NEGO)</strong>을 입력하면 공급가액에서 자동 차감됩니다.
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 4 -->
+        <div style="display:flex;gap:11px;align-items:flex-start;background:#f5f3ff;border:1.5px solid #ddd6fe;border-left:4px solid #7c3aed;border-radius:10px;padding:13px 14px;margin-bottom:9px;">
+          <div style="min-width:30px;height:30px;background:linear-gradient(135deg,#7c3aed,#6d28d9);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#fff;flex-shrink:0;box-shadow:0 2px 8px rgba(124,58,237,.35);">4</div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:12px;font-weight:900;color:#6d28d9;margin-bottom:5px;">🧮 부가가치세 및 결과 확인</div>
+            <div style="font-size:10.5px;color:#374151;line-height:1.85;">
+              ① <strong>부가가치세 포함/제외</strong> 체크박스를 선택합니다.<br>
+              ② VAT 포함 시 <strong>공급가액 × 10%</strong>가 자동 적용됩니다 — 손해배상보험료 포함 후 계산해야 정확합니다.<br>
+              ③ 상단 <strong>총액 배너</strong>에서 공급가액과 최종 합계(천 원 단위 절사)를 실시간으로 확인합니다.
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 5 -->
+        <div style="display:flex;gap:11px;align-items:flex-start;background:#eff6ff;border:1.5px solid #bfdbfe;border-left:4px solid #2563eb;border-radius:10px;padding:13px 14px;margin-bottom:16px;">
+          <div style="min-width:30px;height:30px;background:linear-gradient(135deg,#2563eb,#1d4ed8);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#fff;flex-shrink:0;box-shadow:0 2px 8px rgba(37,99,235,.35);">5</div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:12px;font-weight:900;color:#1d4ed8;margin-bottom:5px;">🖨️ 결과 출력 및 저장</div>
+            <div style="font-size:10.5px;color:#374151;line-height:1.85;">
+              ① 상단 헤더의 <strong>🖨️ 인쇄 버튼</strong>을 클릭하면 A4 보고서 형식으로 출력·PDF 저장됩니다.<br>
+              ② 보고서에는 <strong>공사명·기준일·감리원별 산출 내역·법정 근거</strong>가 포함됩니다.<br>
+              ③ PWA 설치: 브라우저 주소창 아이콘 또는 iOS Safari → 공유 → 홈 화면에 추가.
+            </div>
+          </div>
+        </div>
+
+        <!-- 주요 기능 요약 -->
+        <div class="fml-sec-ttl">💡 주요 기능 안내</div>
+        <div class="fml-g2">
+          <div class="fml-card" style="border-left:3px solid #0c4da2;">
+            <div class="fml-card-ttl" style="color:#0c4da2;">📐 계산식 안내 버튼</div>
+            <div class="fml-note">오른쪽 하단 플로팅 버튼(FAB)을 클릭하면 이 창이 열립니다. 탭을 전환하여 산정 방식·계산식·배치 기준·주의사항을 확인하세요.</div>
+          </div>
+          <div class="fml-card" style="border-left:3px solid #f97316;">
+            <div class="fml-card-ttl" style="color:#f97316;">⚡ 실시간 자동 계산</div>
+            <div class="fml-note">등급·일수·요율 변경 즉시 상단 배너 총액이 실시간 갱신됩니다. 별도의 계산 버튼 없이 입력값을 변경하기만 하면 됩니다.</div>
+          </div>
+          <div class="fml-card" style="border-left:3px solid #16a34a;">
+            <div class="fml-card-ttl" style="color:#16a34a;">⚠️ 3단계 인일수 합산 필수</div>
+            <div class="fml-note">① 사전 검토 + ② 실제 해체 + ③ 완료 보고 3단계를 모두 합산해야 합니다. 본 공사 기간만 입력하면 직접인건비가 누락됩니다.</div>
+          </div>
+          <div class="fml-card" style="border-left:3px solid #e63312;">
+            <div class="fml-card-ttl" style="color:#e63312;">⚠️ VAT 과소 산출 주의</div>
+            <div class="fml-note">손해배상보험료를 제외하고 VAT를 계산하면 과소 산출로 법적 분쟁 원인이 됩니다. 공급가액에 보험료를 반드시 포함하세요.</div>
+          </div>
+        </div>
+
+        <!-- 법적 근거 -->
+        <div class="fml-hi" style="margin-top:4px;">
+          <div class="fml-card-ttl" style="color:#0c4da2;">📌 주요 법적 근거</div>
+          <div class="fml-note" style="font-size:10.5px;line-height:2.1;">
+            <strong>건축물관리법 제30~32조</strong> — 해체공사 감리 의무 및 감리자 지정<br>
+            <strong>국토교통부 고시</strong> — 해체계획서 작성 및 감리업무 기준 · 감리비 산출 공식<br>
+            <strong>건설기술진흥법</strong> — 손해배상보험료 감리비 계상 의무<br>
+            <strong>2026년 기준노임</strong> — 한국엔지니어링협회 2025.12.29 공표 · 2026.01.01 적용
+          </div>
+        </div>
+
+      </div>
+
       <!-- ── 탭 1: 산정 방식 ── -->
-      <div class="fml-panel on" id="sec-method">
+      <div class="fml-panel" id="sec-method">
         <div class="fml-sec-ttl">법적 토대</div>
         <div class="fml-g2">
           <div class="fml-card">
@@ -1195,6 +1307,15 @@ function openModal(){
   const ov=document.getElementById('fmlOverlay');
   ov.classList.remove('hidden');
   document.body.style.overflow='hidden';
+  /* 항상 이용방법 탭을 먼저 표시 */
+  document.querySelectorAll('.fml-itab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.fml-panel').forEach(s=>s.classList.remove('on'));
+  const hw=document.getElementById('sec-howto');
+  if(hw)hw.classList.add('on');
+  const firstTab=document.querySelector('.fml-itab');
+  if(firstTab)firstTab.classList.add('on');
+  const bd=document.querySelector('.fml-bd');
+  if(bd)bd.scrollTop=0;
 }
 function closeModal(){
   const ov=document.getElementById('fmlOverlay');
