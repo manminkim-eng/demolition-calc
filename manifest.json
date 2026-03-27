@@ -1,33 +1,27 @@
 {
-  "name": "해체감리",
+  "name": "해체감리 — 해체감리 산출기 [MANMIN-Ver3.0]",
   "short_name": "해체감리",
-  "description": "해체감리 산출기 — 건축물관리법 국토교통부 고시 기준 2026년 기준노임 적용 MANMIN-Ver3.0",
+  "description": "건축물관리법 · 국토교통부 고시 기준 2026년 기준노임 적용 해체감리 산출기 | ARCHITECT KIM MANMIN",
   "start_url": "./index.html",
-  "display": "standalone",
-  "orientation": "any",
-  "background_color": "#0c4da2",
-  "theme_color": "#0c4da2",
-  "lang": "ko",
   "scope": "./",
-  "categories": ["utilities", "productivity", "business"],
+  "display": "standalone",
+  "background_color": "#f4f6f9",
+  "theme_color": "#0c4da2",
+  "orientation": "portrait-primary",
+  "lang": "ko",
+  "categories": ["utilities", "productivity"],
   "icons": [
-    { "src": "icons/icon-72x72.png",            "sizes": "72x72",   "type": "image/png" },
-    { "src": "icons/icon-96x96.png",            "sizes": "96x96",   "type": "image/png" },
-    { "src": "icons/icon-128x128.png",          "sizes": "128x128", "type": "image/png" },
-    { "src": "icons/icon-144x144.png",          "sizes": "144x144", "type": "image/png" },
-    { "src": "icons/icon-152x152.png",          "sizes": "152x152", "type": "image/png" },
-    { "src": "icons/icon-192x192.png",          "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "icons/icon-384x384.png",          "sizes": "384x384", "type": "image/png" },
-    { "src": "icons/icon-512x512.png",          "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "icons/icon-maskable-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    { "src": "./icons/icon-72x72.png",   "sizes": "72x72",   "type": "image/png", "purpose": "any" },
+    { "src": "./icons/icon-96x96.png",   "sizes": "96x96",   "type": "image/png", "purpose": "any" },
+    { "src": "./icons/icon-128x128.png", "sizes": "128x128", "type": "image/png", "purpose": "any" },
+    { "src": "./icons/icon-144x144.png", "sizes": "144x144", "type": "image/png", "purpose": "any" },
+    { "src": "./icons/icon-152x152.png", "sizes": "152x152", "type": "image/png", "purpose": "any" },
+    { "src": "./icons/icon-192x192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable any" },
+    { "src": "./icons/icon-256x256.png", "sizes": "256x256", "type": "image/png", "purpose": "any" },
+    { "src": "./icons/icon-384x384.png", "sizes": "384x384", "type": "image/png", "purpose": "any" },
+    { "src": "./icons/icon-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable any" }
   ],
-  "shortcuts": [
-    {
-      "name": "해체감리 산출",
-      "short_name": "해체감리",
-      "description": "해체감리 대가를 바로 산출합니다",
-      "url": "./index.html",
-      "icons": [{ "src": "icons/icon-96x96.png", "sizes": "96x96" }]
-    }
+  "screenshots": [
+    { "src": "./icons/icon-512x512.png", "sizes": "512x512", "type": "image/png", "form_factor": "narrow" }
   ]
 }

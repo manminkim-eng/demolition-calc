@@ -57,6 +57,105 @@ body{font-family:'Pretendard',sans-serif;background:#f4f6f9;color:#1a2744;min-he
   50%{box-shadow:0 2px 20px rgba(249,115,22,.7);}
 }
 @media(max-width:520px){#pwa-hdr-btn .pwa-hdr-txt{display:none;}}
+/* ══ PWA 헤더 버튼 강화 (해체감리 Edition) ══ */
+#pwa-hdr-btn{
+  display:none;align-items:center;gap:6px;
+  background:linear-gradient(135deg,#f97316,#0c4da2) !important;
+  color:#fff !important;border:none;padding:9px 14px;border-radius:9px;
+  font-size:12px;font-weight:800;cursor:pointer;
+  font-family:inherit;white-space:nowrap;flex-shrink:0;
+  transition:all .2s;
+  box-shadow:0 2px 12px rgba(249,115,22,.45);
+  animation:dem-pwa-glow 2.5s ease-in-out infinite;
+}
+#pwa-hdr-btn.visible{display:flex !important;}
+#pwa-hdr-btn:hover{
+  background:linear-gradient(135deg,#ea580c,#0a3d85) !important;
+  transform:translateY(-1px) !important;
+  box-shadow:0 4px 18px rgba(249,115,22,.65) !important;
+  animation:none !important;
+}
+@keyframes dem-pwa-glow{
+  0%,100%{box-shadow:0 2px 12px rgba(249,115,22,.45);}
+  50%{box-shadow:0 2px 22px rgba(249,115,22,.75),0 0 10px rgba(12,77,162,.25);}
+}
+
+/* ══ 배너 강화 ══ */
+.pwa-install-banner{
+  background:linear-gradient(135deg,#0a3270 0%,#0c4da2 60%,#0e5bc0 100%) !important;
+  border:2px solid rgba(147,197,253,.35) !important;
+  border-radius:20px !important;
+  padding:16px 18px !important;
+  bottom:14px !important;left:14px !important;right:14px !important;
+  box-shadow:0 8px 40px rgba(12,77,162,.5) !important;
+  gap:13px !important;
+  animation:dem-banner-up .4s cubic-bezier(.22,.61,.36,1) !important;
+}
+@keyframes dem-banner-up{from{transform:translateY(120%);opacity:0}to{transform:translateY(0);opacity:1}}
+.pwa-install-banner img{
+  width:52px !important;height:52px !important;
+  border-radius:13px !important;
+  box-shadow:0 3px 14px rgba(12,77,162,.4) !important;
+  object-fit:cover;
+}
+.pwa-banner-title{font-size:14px !important;font-weight:800 !important;color:#fff !important;}
+.pwa-banner-desc{font-size:11px !important;color:#93c5fd !important;margin-top:3px !important;font-weight:600 !important;}
+.pwa-btn-install{
+  background:linear-gradient(135deg,#f97316,#ea580c) !important;
+  color:#fff !important;
+  font-size:12px !important;font-weight:800 !important;
+  padding:10px 18px !important;border-radius:10px !important;
+  box-shadow:0 2px 10px rgba(249,115,22,.4) !important;
+  cursor:pointer;font-family:inherit;border:none;
+  transition:all .2s !important;white-space:nowrap;
+}
+.pwa-btn-install:hover{transform:translateY(-1px) !important;}
+.pwa-btn-dismiss{
+  color:rgba(255,255,255,.75) !important;
+  font-size:12px !important;font-weight:700 !important;
+  padding:10px 13px !important;border:1px solid rgba(147,197,253,.25) !important;
+  border-radius:10px !important;background:rgba(255,255,255,.1) !important;
+  cursor:pointer;font-family:inherit;
+  transition:all .15s !important;white-space:nowrap;
+}
+.pwa-btn-dismiss:hover{color:#eff6ff !important;}
+
+/* ══ iOS 안내 모달 ══ */
+#ios-modal-dem{
+  position:fixed;bottom:0;left:0;right:0;z-index:10000;
+  background:linear-gradient(135deg,#0a3270,#0c4da2);
+  border-top:2px solid rgba(147,197,253,.5);
+  border-radius:20px 20px 0 0;
+  padding:22px 20px calc(18px + env(safe-area-inset-bottom,0px));
+  display:none;
+  box-shadow:0 -8px 40px rgba(12,77,162,.55);
+  animation:dem-ios-up .35s cubic-bezier(.22,.61,.36,1);
+}
+#ios-modal-dem.show{display:block;}
+@keyframes dem-ios-up{from{transform:translateY(110%);opacity:0}to{transform:translateY(0);opacity:1}}
+.dm-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.dm-title{font-size:15px;font-weight:800;color:#fff;}
+.dm-cls{background:rgba(255,255,255,.12);border:none;color:#fff;
+  width:28px;height:28px;border-radius:50%;font-size:13px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;}
+.dm-step{display:flex;align-items:flex-start;gap:12px;
+  background:rgba(255,255,255,.07);border-radius:10px;padding:12px;margin-bottom:8px;}
+.dm-num{min-width:26px;height:26px;border-radius:50%;
+  background:rgba(249,115,22,.35);border:1px solid rgba(249,115,22,.6);
+  color:#fed7aa;font-size:11px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.dm-txt{font-size:13px;color:#bfdbfe;line-height:1.5;}
+.dm-txt strong{color:#fff;}
+.dm-foot{text-align:center;font-size:11px;color:#93c5fd;margin-top:12px;}
+
+@media(max-width:480px){
+  #pwa-hdr-btn .pwa-hdr-txt{display:none;}
+  #pwa-hdr-btn{padding:9px 11px;}
+  .pwa-install-banner{bottom:10px !important;left:10px !important;right:10px !important;padding:13px 14px !important;}
+  .pwa-install-banner img{width:42px !important;height:42px !important;}
+}
+@media(max-width:360px){.pwa-banner-desc{display:none;}}
+
 
 /* ══ TAB BAR ══ */
 .tab-bar{background:#0a3d85;border-top:1px solid rgba(255,255,255,.1);overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
@@ -841,9 +940,7 @@ body{font-family:'Pretendard',sans-serif;background:#f4f6f9;color:#1a2744;min-he
 <header class="app-header no-print">
   <div class="header-inner">
     <div class="brand-logo">
-      <div class="brand-icon">
-        <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-      </div>
+      <div class="brand-icon" style="background:none;padding:0;overflow:hidden;width:42px;height:42px;border-radius:10px;flex-shrink:0;box-shadow:0 2px 10px rgba(12,77,162,.38);"><img src="./icons/brand-icon.jpg" alt="해체감리 MANMIN" style="width:42px;height:42px;object-fit:cover;border-radius:10px;display:block;"/></div>
       <div class="brand-texts">
         <div class="brand-title">해체감리 산출기 [MANMIN-Ver3.0]</div>
         <div class="brand-sub">건축물관리법 · 국토교통부 고시 기준 · 2026년 기준노임 적용</div>
@@ -1376,16 +1473,28 @@ window.switchTab = function(id){
 setTimeout(scaleA4, 100);
 </script>
 
+<!-- ═══ iOS 홈화면 추가 안내 모달 ═══ -->
+<div id="ios-modal-dem">
+  <div class="dm-hdr">
+    <div class="dm-title">📱 홈 화면에 추가하기 (iOS)</div>
+    <button class="dm-cls" onclick="document.getElementById('ios-modal-dem').classList.remove('show')">✕</button>
+  </div>
+  <div class="dm-step"><div class="dm-num">1</div><div class="dm-txt">Safari 하단 <strong>공유 버튼</strong> (□↑) 을 탭하세요</div></div>
+  <div class="dm-step"><div class="dm-num">2</div><div class="dm-txt">스크롤해서 <strong>홈 화면에 추가</strong>를 탭하세요</div></div>
+  <div class="dm-step"><div class="dm-num">3</div><div class="dm-txt">오른쪽 상단 <strong>추가</strong>를 탭하면 완료!</div></div>
+  <div class="dm-foot">해체감리를 홈 화면에서 오프라인으로도 사용 가능합니다 ✓</div>
+</div>
+
 <!-- ═══ PWA 설치 배너 ═══ -->
 <div id="pwa-banner" class="pwa-install-banner" style="display:none;">
-  <img src="icons/icon-192x192.png" alt="해체감리 산출기"/>
+  <img src="./icons/brand-icon.jpg" alt="해체감리 MANMIN"/>
   <div class="pwa-banner-text">
-    <div class="pwa-banner-title">홈 화면에 설치하시겠습니까?</div>
-    <div class="pwa-banner-desc">오프라인에서도 사용 가능합니다</div>
+    <div class="pwa-banner-title">📲 해체감리 앱으로 설치!</div>
+    <div class="pwa-banner-desc">홈화면 추가 → 오프라인 해체감리 산출 가능 · 빠른 실행</div>
   </div>
   <div class="pwa-banner-btns">
-    <button class="pwa-btn-dismiss" onclick="window.pwaDismiss&&window.pwaDismiss()">닫기</button>
-    <button class="pwa-btn-install" id="pwa-install-btn">설치</button>
+    <button class="pwa-btn-dismiss" onclick="window.pwaDismiss&&window.pwaDismiss()">나중에</button>
+    <button class="pwa-btn-install" id="pwa-install-btn">설치하기</button>
   </div>
 </div>
 
@@ -1393,53 +1502,87 @@ setTimeout(scaleA4, 100);
 <script>
 (function(){
   var deferred = null;
+  var _isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  var _isSA  = window.matchMedia('(display-mode:standalone)').matches || !!navigator.standalone;
 
-  /* SW 등록 */
+  /* ── 1. Service Worker 등록 ── */
   if('serviceWorker' in navigator){
     window.addEventListener('load', function(){
-      navigator.serviceWorker.register('./sw.js')
+      navigator.serviceWorker.register('./sw.js', {scope:'./'})
         .then(function(r){
           console.log('[PWA] SW 등록 완료:', r.scope);
           r.addEventListener('updatefound', function(){
-            var nw = r.installing;
-            if(!nw) return;
+            var nw = r.installing; if(!nw) return;
             nw.addEventListener('statechange', function(){
               if(nw.state === 'installed' && navigator.serviceWorker.controller){
                 var b = document.createElement('div');
-                b.style.cssText = 'position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:9999;background:#0c4da2;color:#fff;padding:10px 20px;border-radius:12px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:10px;box-shadow:0 4px 20px rgba(0,0,0,.4);white-space:nowrap;';
-                b.innerHTML = '<span>🔄 새 버전 있음</span><button onclick="navigator.serviceWorker.ready.then(r=>{r.waiting&&r.waiting.postMessage({type:\'SKIP_WAITING\'})});this.parentNode.remove();" style="background:rgba(255,255,255,.2);border:none;color:#fff;padding:4px 10px;border-radius:6px;cursor:pointer;font-weight:700;">업데이트</button>';
+                b.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);z-index:9999;background:#0c4da2;color:#fff;padding:10px 20px;border-radius:12px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:10px;box-shadow:0 4px 20px rgba(12,77,162,.5);white-space:nowrap;font-family:inherit;';
+                b.innerHTML = '<span>🔄 새 버전 준비됨</span>'
+                  + '<button onclick="navigator.serviceWorker.ready.then(function(r){if(r.waiting)r.waiting.postMessage({type:\'SKIP_WAITING\'});});this.parentNode.remove();location.reload();" '
+                  + 'style="background:rgba(255,255,255,.2);border:none;color:#fff;padding:5px 12px;border-radius:7px;cursor:pointer;font-weight:800;font-family:inherit;">지금 적용</button>'
+                  + '<button onclick="this.parentNode.remove()" style="background:none;border:none;color:rgba(255,255,255,.7);cursor:pointer;font-size:16px;padding:0 4px;">✕</button>';
                 document.body.appendChild(b);
+                setTimeout(function(){if(b.parentNode)b.remove();}, 8000);
               }
             });
           });
         })
         .catch(function(e){ console.warn('[PWA] SW 등록 실패:', e); });
+      navigator.serviceWorker.addEventListener('controllerchange', function(){
+        if(!window._pwaR){ window._pwaR=true; location.reload(); }
+      });
     });
   }
 
-  /* beforeinstallprompt 캡처 */
+  /* ── 2. beforeinstallprompt (Android/PC) ── */
   window.addEventListener('beforeinstallprompt', function(e){
     e.preventDefault();
     deferred = e;
-    /* 헤더 설치 버튼 표시 */
     var hdrBtn = document.getElementById('pwa-hdr-btn');
     if(hdrBtn) hdrBtn.classList.add('visible');
-    /* 배너 (세션당 1회) */
-    if(!sessionStorage.getItem('pwa-dismissed') &&
-       !window.matchMedia('(display-mode:standalone)').matches){
+    if(!sessionStorage.getItem('pwa-dismissed') && !_isSA){
       setTimeout(function(){
         var banner = document.getElementById('pwa-banner');
         if(banner) banner.style.display = 'flex';
-      }, 1500);
+      }, 2000);
     }
   });
 
-  /* 설치 실행 (전역) */
+  /* ── 3. iOS: 헤더 버튼 표시 + 2초 후 안내 모달 ── */
+  document.addEventListener('DOMContentLoaded', function(){
+    if(_isIOS && !_isSA){
+      var hdrBtn = document.getElementById('pwa-hdr-btn');
+      if(hdrBtn) hdrBtn.classList.add('visible');
+      if(!sessionStorage.getItem('pwa-dismissed')){
+        setTimeout(function(){
+          var m = document.getElementById('ios-modal-dem');
+          if(m) m.classList.add('show');
+        }, 2000);
+      }
+    }
+    if(_isSA){
+      var hdrBtn = document.getElementById('pwa-hdr-btn');
+      if(hdrBtn) hdrBtn.style.display = 'none';
+    }
+    /* 배너 내 설치 버튼 연결 */
+    var installBtn = document.getElementById('pwa-install-btn');
+    if(installBtn) installBtn.addEventListener('click', function(){
+      window.pwaTriggerInstall && window.pwaTriggerInstall();
+    });
+  });
+
+  /* ── 4. 설치 실행 (전역) ── */
   window.pwaTriggerInstall = function(){
     var banner = document.getElementById('pwa-banner');
     if(banner) banner.style.display = 'none';
+    if(_isIOS && !_isSA){
+      var m = document.getElementById('ios-modal-dem');
+      if(m) m.classList.add('show');
+      return;
+    }
     if(!deferred){
-      alert('이미 설치되어 있거나 자동 설치를 지원하지 않는 브라우저입니다.\n\n📱 iOS Safari: 공유(□↑) → "홈 화면에 추가"\n💻 Chrome/Edge: 주소창 우측 ⊕ 아이콘');
+      if(_isSA){ alert('✅ 이미 앱으로 설치되어 있습니다.'); return; }
+      alert('📱 브라우저 메뉴 → 앱 설치 / 홈 화면에 추가를 선택하세요.');
       return;
     }
     deferred.prompt();
@@ -1447,28 +1590,24 @@ setTimeout(scaleA4, 100);
       if(r.outcome === 'accepted'){
         var hdrBtn = document.getElementById('pwa-hdr-btn');
         if(hdrBtn) hdrBtn.classList.remove('visible');
-        console.log('[PWA] 설치 완료');
       }
       deferred = null;
     });
   };
 
-  /* 기존 배너 설치 버튼 연결 */
-  var installBtn = document.getElementById('pwa-install-btn');
-  if(installBtn){
-    installBtn.addEventListener('click', function(){
-      window.pwaTriggerInstall && window.pwaTriggerInstall();
-    });
-  }
-
-  /* 배너 닫기 (전역) */
+  /* ── 5. 배너 닫기 (전역) ── */
   window.pwaDismiss = function(){
     var banner = document.getElementById('pwa-banner');
-    if(banner) banner.style.display = 'none';
+    if(banner){
+      banner.style.transition='transform .3s,opacity .25s';
+      banner.style.transform='translateY(120%)';
+      banner.style.opacity='0';
+      setTimeout(function(){ banner.style.display='none'; banner.style=''; }, 330);
+    }
     try{ sessionStorage.setItem('pwa-dismissed','1'); }catch(e){}
   };
 
-  /* 설치 완료 이벤트 */
+  /* ── 6. 설치 완료 ── */
   window.addEventListener('appinstalled', function(){
     var hdrBtn = document.getElementById('pwa-hdr-btn');
     var banner = document.getElementById('pwa-banner');
@@ -1476,15 +1615,6 @@ setTimeout(scaleA4, 100);
     if(banner) banner.style.display = 'none';
     deferred = null;
   });
-
-  /* standalone 모드이면 헤더 버튼 숨김 */
-  if(window.matchMedia('(display-mode:standalone)').matches ||
-     window.navigator.standalone === true){
-    document.addEventListener('DOMContentLoaded', function(){
-      var hdrBtn = document.getElementById('pwa-hdr-btn');
-      if(hdrBtn) hdrBtn.style.display = 'none';
-    });
-  }
 })();
 </script>
 </body>
