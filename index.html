@@ -598,6 +598,15 @@ body{background:#f4f6f9;color:#1a2744;min-height:100vh;}
 @media print{.pwa-install-banner{display:none!important;}}
 @media(max-width:480px){.pwa-banner-btns{flex-direction:column;gap:6px;}.pwa-btn-dismiss,.pwa-btn-install{text-align:center;}}
 </style>
+<style id="mm-r24b">/* R24 ①② (2026-09-05 · S10 3-B 소급 · 지시서 §21-1 R24) — 인쇄 시 collapse 표의 우측 세로선 소실 → separate + 셀 자체 선. 화면·JPG·PDF 동일 DOM(§2②). 선색은 기존 값 유지. */
+.a4-tbl{border-collapse:separate;border-spacing:0;border:0;}
+.a4-tbl th{border:0;border-right:1px solid #3a4a5e;border-bottom:1px solid #3a4a5e;}
+.a4-tbl th:first-child{border-left:1px solid #3a4a5e;}
+.a4-tbl tr:first-child th{border-top:1px solid #3a4a5e;}
+.a4-tbl td{border:0;border-right:1px solid #3a4a5e;border-bottom:1px solid #3a4a5e;}
+.a4-tbl td:first-child{border-left:1px solid #3a4a5e;}
+.a4-tbl tr:first-child td{border-top:1px solid #3a4a5e;}
+</style>
 </head>
 <body>
 <!-- ══ FAB (v5.0 §18-11 — 72×72 규격 1개 · 계산식 안내) ══ -->
