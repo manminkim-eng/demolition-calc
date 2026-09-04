@@ -1690,7 +1690,7 @@ var MM_PAGE = { W:794, H:1123, MT:14, MR:12, MB:22, ML:14 };
 function markLongTables(page){
   var mmPerPx=210/794, usable=(297-14-22)/mmPerPx;   /* 261mm ≈ 987px */
   page.querySelectorAll('table.a4-tbl,table.a4-meta-table').forEach(function(t){
-    t.classList.toggle('long', t.getBoundingClientRect().height > usable);
+    t.classList.toggle('long', t.getBoundingClientRect().height>usable || t.classList.contains('shadow') || t.classList.contains('splitok'));
   });
 }
 /* 블록 원자 방식(§17-7) — #a4Page 직계 자식. 소제목(.a4-sub)은 바로 뒤 형제와 한 덩어리. */
@@ -1706,8 +1706,8 @@ function mmBlocks(page){
       pend={top:top, bot:bot};
       return;
     }
-    if(pend){ out.push({top:pend.top, bot:bot}); pend=null; return; }
-    out.push({top:top, bot:bot});
+    if(pend){ out.push({top:pend.top, bot:bot, split:el.classList.contains('long')}); pend=null; return;   /* R23: 소제목+표 병합 블록 split 승계(§20-16 ①) */ }
+    out.push({top:top, bot:bot, split:el.classList.contains('long')});
   });
   if(pend) out.push(pend);
   out.sort(function(a,b){ return a.top-b.top; });
@@ -1734,6 +1734,8 @@ function mmSegments(page){
       if(cut>=blocks[i].bot-0.5) i++;
       y=cut; continue;
     }
+        /* R23 (S10 소급 · 지시서 §20-15 ④·§20-16 ①): 다음 블록이 행 나눔 허용 표(.long)이고 남은 공간이 1/4 이상이면 행 경계에서 잘라 미리보기 순서대로 채운다 */
+    if(j<blocks.length && blocks[j].split && (limit-end)>usable*0.25){ var c2=mmPickCut(cuts,end,limit); if(c2>blocks[j].top+20){ segs.push([y,c2]); y=c2; blocks[j].top=c2; i=j; continue; } }
     segs.push([y,end]); y=end; i=j;
   }
   if(stop-y>5) segs.push([y,stop]);
@@ -1882,5 +1884,10 @@ function mmToast(msg){
 </script>
 <script>/* R26 (2026-09-04 · 지시서 §20-15 ③ · S10 소급) — 인쇄 중 문서 제목을 비워 PDF 머리글의 페이지 제목을 지운다. 쪽번호·URL 은 브라우저 옵션 */
 (function(){var t=null;window.addEventListener('beforeprint',function(){if(t===null){t=document.title;}document.title=' ';});window.addEventListener('afterprint',function(){if(t!==null){document.title=t;t=null;}});})();</script>
+<script id="mm-r27">/* R27 (2026-09-04 · S10) — ① html2canvas 는 문서를 복제할 때 브라우저 확장 프로그램이 shadow DOM 에 심은 style 시트(Tailwind .c{transform:rotate(30deg)} · antd 등)까지 본문으로 펼친다.
+   화면에서는 격리돼 보이지 않던 규칙이 클론에서 td.c / .r / .k 같은 짧은 클래스에 맞아 JPG 셀이 기울고 행이 부푼다(38 실측 2026-09-04 · 확장 31시트 누출).
+   처방: 캡처 직전 우리 문서의 light-DOM style/link 에 data-mm-own 을 찍고, 클론에서 표식 없는 style/link 를 제거한다.
+   ② 라이브러리가 없으면(구 SW opaque 캐시 · CDN 차단) exportA4Jpg 가 ReferenceError 로 조용히 멈춘다(40 미리보기 미표시) → 지연 로더가 CDN 에서 받아 이어서 실행한다. 계산·출력 함수 무접촉(전역 html2canvas 래핑). */
+(function(){var CDN='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';var raw=window.html2canvas;var cur;function wrap(h){if(!h||h.__mm)return h;function p(el,opt){document.querySelectorAll('style,link[rel=stylesheet]').forEach(function(n){n.setAttribute('data-mm-own','1');});opt=Object.assign({},opt||{});var prev=opt.onclone;opt.onclone=function(doc,x){doc.querySelectorAll('style,link[rel=stylesheet]').forEach(function(n){if(!n.hasAttribute('data-mm-own')&&(n.textContent||'').indexOf('___html2canvas___')<0)n.remove();});return prev?prev(doc,x):undefined;};return h(el,opt);}p.__mm=1;try{Object.keys(h).forEach(function(k){p[k]=h[k];});}catch(e){}return p;}function lazy(el,opt){return new Promise(function(res,rej){var s=document.createElement('script');s.src=CDN;s.onload=function(){if(cur&&cur!==lazy)res(cur(el,opt));else rej(new Error('html2canvas 초기화 실패'));};s.onerror=function(){rej(new Error('html2canvas 로드 실패 — 네트워크·차단 확인'));};document.head.appendChild(s);});}cur=raw?wrap(raw):lazy;try{Object.defineProperty(window,'html2canvas',{configurable:true,get:function(){return cur;},set:function(v){cur=wrap(v);}});}catch(e){window.html2canvas=cur;}})();</script>
 </body>
 </html>
