@@ -118,6 +118,35 @@ footer.foot{max-width:1240px;margin:0 auto;padding:0 24px 40px;color:var(--text2
 }
 .pfoot{display:none}
 @media print{.pfoot{display:flex}}
+/* ── 좁은 화면 대응(r1 · 2026-10-12) : 화면 전용 — 인쇄·PDF에는 영향 없음 ── */
+@media screen and (max-width:640px){
+  .k1 td:first-child,.k1 th:first-child{white-space:normal}
+  /* 글 표(숫자 칸 없는 표) → 행마다 카드로 쌓기 */
+  .tbl.stack{border:0;border-radius:0;overflow:visible}
+  .tbl.stack table,.tbl.stack tbody,.tbl.stack tr,.tbl.stack td{display:block;width:auto}
+  .tbl.stack thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  .tbl.stack table{background:transparent}
+  .tbl.stack tr{border:1px solid var(--line);border-radius:10px;background:#fff;margin:0 0 10px;overflow:hidden}
+  .tbl.stack td{border-bottom:1px solid var(--line);padding:8px 12px}
+  .tbl.stack tr td:last-child{border-bottom:0}
+  .tbl.stack td:first-child{background:var(--navy-l);color:var(--navy-d);font-weight:700}
+  .tbl.stack td[data-th]:not(:first-child)::before{content:attr(data-th);display:block;font-size:12px;font-weight:700;color:var(--text2);margin-bottom:2px}
+  .tbl.stack.c2 td[data-th]:not(:first-child)::before{display:none}
+  .tbl.stack td:empty{display:none}
+  /* 숫자 표 → 표 모양 유지, 글자·여백 축소, 넘치면 좌우로 밀기(오른쪽 그림자로 표시) */
+  .tbl:not(.stack){background:linear-gradient(to right,#fff 30%,rgba(255,255,255,0)) left/40px 100% no-repeat local,linear-gradient(to left,#fff 30%,rgba(255,255,255,0)) right/40px 100% no-repeat local,radial-gradient(farthest-side at 100% 50%,rgba(26,26,46,.22),transparent) right/12px 100% no-repeat scroll,#fff}
+  .tbl:not(.stack) table{font-size:13px;background:transparent}
+  .tbl:not(.stack) th,.tbl:not(.stack) td{padding:7px 8px}
+  /* 수식 → 줄바꿈 허용 */
+  .eq{white-space:pre-wrap;word-break:keep-all;font-size:13px;line-height:1.75;padding:12px 14px}
+  .eq .c{display:block;padding-left:1em}
+  .svgbox{position:relative}
+  .svgbox::after{content:"← 좌우로 밀어서 보기 →";display:block;text-align:center;font-size:12px;color:var(--text2);margin-top:6px;position:sticky;left:0}
+  ol.legend{grid-template-columns:1fr}
+  .steps>li{padding-left:34px;margin-left:14px}
+}
+.rev{white-space:nowrap}
+@media print{.rev{display:none}}
 </style>
 </head><body>
 <header class="top"><div class="top-in">
@@ -307,7 +336,7 @@ footer.foot{max-width:1240px;margin:0 auto;padding:0 24px 40px;color:var(--text2
 <h3 id="a3">A3. 용어</h3>
 <div class="brk"><div class="k1"><div class="tbl"><table><thead><tr><th class="">용어</th><th class="">뜻</th></tr></thead><tbody><tr><td class="">관리자</td><td class="">관계 법령에 따라 해당 건축물의 관리자로 규정된 자 또는 해당 건축물의 소유자. 소유자와의 관리계약 등에 따라 건축물의 관리책임을 진 자는 관리자로 본다(법 제2조제3호)</td></tr><tr><td class="">해체</td><td class="">건축물을 건축·대수선·리모델링하거나 멸실시키기 위하여 건축물 전체 또는 일부를 파괴하거나 절단하여 제거하는 것(법 제2조제7호)</td></tr><tr><td class="">허가권자</td><td class="">특별자치시장·특별자치도지사 또는 시장·군수·구청장(법 제30조제1항)</td></tr><tr><td class="">해체공사감리자</td><td class="">허가권자가 지정하여 해체공사감리를 하는 자(법 제31조제1항)</td></tr><tr><td class="">필수확인점</td><td class="">다음 단계의 공정을 진행하기 전에 해체공사감리자의 현장점검에 따른 승인을 받아야 하는 공사 중지점(법 제32조제5항제1호)</td></tr><tr><td class="">실비정액가산방식</td><td class="">직접인건비 + 직접경비 + 제경비 + 기술료로 감리비용을 산정하는 방식(시행규칙 제13조제4항제2호 · 고시 제23조제4항)</td></tr><tr><td class="">요율 방식</td><td class="">해체공사비에 고시 별표 2 요율을 곱하여 산정하는 방식(시행규칙 제13조제4항제1호)</td></tr><tr><td class="">직접인건비</td><td class="">감리업무에 종사하는 기술자의 인건비 — 투입 인원수 × 기술등급별 노임단가</td></tr><tr><td class="">제경비</td><td class="">직접비에 포함되지 아니하는 비용 — 직접인건비의 110~120%</td></tr><tr><td class="">기술료</td><td class="">기술의 사용 및 기술축적을 위한 대가와 이윤 등 — (직접인건비 + 제경비)의 20~40%</td></tr><tr><td class="">공급가액</td><td class="">부가가치세를 더하기 전 금액</td></tr><tr><td class="">NEGO 차감액</td><td class="">계약 협의로 공급가액에서 빼는 금액</td></tr></tbody></table></div></div></div>
 </section></main></div>
-<footer class="foot">© 2026 김만민 건축사 · ㈜대성건축사사무소 · 건축물 해체공사 감리대가 산출기 사용자 매뉴얼 Ver-5.0 · 건축물관리법 시행규칙 제13조제4항 · 국토교통부고시 제2022-446호(2022.8.4. 시행) 제23조</footer>
+<footer class="foot">© 2026 김만민 건축사 · ㈜대성건축사사무소 · 건축물 해체공사 감리대가 산출기 사용자 매뉴얼 Ver-5.0 · 건축물관리법 시행규칙 제13조제4항 · 국토교통부고시 제2022-446호(2022.8.4. 시행) 제23조 <span class="rev">· 화면 대응 개정 2026-10-12</span></footer>
 <div class="pfoot"><span>건축물 해체공사 감리대가 산출기 사용자 매뉴얼 Ver-5.0</span><span>2026-10-11</span></div>
 <div id="lb" role="dialog" aria-label="그림 확대"><img alt=""></div>
 <button class="totop" aria-label="맨 위로">↑</button>
@@ -324,5 +353,9 @@ footer.foot{max-width:1240px;margin:0 auto;padding:0 24px 40px;color:var(--text2
     document.querySelectorAll('section.ch,h3[id]').forEach(function(s){io.observe(s);});
   }
 })();
+/* 좁은 화면 표 쌓기 준비: 숫자 칸이 없는 표에 stack 표시, 각 칸에 머리글(data-th) 복사 */
+(function(){document.querySelectorAll('.tbl').forEach(function(t){var tb=t.querySelector('table');if(!tb||!tb.tHead)return;
+ if(tb.querySelector('td.num,th.num'))return;var hs=[].map.call(tb.tHead.rows[0].cells,function(c){return c.textContent.trim()});
+ [].forEach.call(tb.tBodies[0].rows,function(r){[].forEach.call(r.cells,function(c,i){if(hs[i])c.setAttribute('data-th',hs[i])})});t.classList.add('stack');if(hs.length===2)t.classList.add('c2')})})();
 </script>
 </body></html>

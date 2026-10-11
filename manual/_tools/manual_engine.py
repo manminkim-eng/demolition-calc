@@ -135,6 +135,35 @@ footer.foot{max-width:1240px;margin:0 auto;padding:0 24px 40px;color:var(--text2
 }
 .pfoot{display:none}
 @media print{.pfoot{display:flex}}
+/* ── 좁은 화면 대응(r1 · 2026-10-12) : 화면 전용 — 인쇄·PDF에는 영향 없음 ── */
+@media screen and (max-width:640px){
+  .k1 td:first-child,.k1 th:first-child{white-space:normal}
+  /* 글 표(숫자 칸 없는 표) → 행마다 카드로 쌓기 */
+  .tbl.stack{border:0;border-radius:0;overflow:visible}
+  .tbl.stack table,.tbl.stack tbody,.tbl.stack tr,.tbl.stack td{display:block;width:auto}
+  .tbl.stack thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  .tbl.stack table{background:transparent}
+  .tbl.stack tr{border:1px solid var(--line);border-radius:10px;background:#fff;margin:0 0 10px;overflow:hidden}
+  .tbl.stack td{border-bottom:1px solid var(--line);padding:8px 12px}
+  .tbl.stack tr td:last-child{border-bottom:0}
+  .tbl.stack td:first-child{background:var(--navy-l);color:var(--navy-d);font-weight:700}
+  .tbl.stack td[data-th]:not(:first-child)::before{content:attr(data-th);display:block;font-size:12px;font-weight:700;color:var(--text2);margin-bottom:2px}
+  .tbl.stack.c2 td[data-th]:not(:first-child)::before{display:none}
+  .tbl.stack td:empty{display:none}
+  /* 숫자 표 → 표 모양 유지, 글자·여백 축소, 넘치면 좌우로 밀기(오른쪽 그림자로 표시) */
+  .tbl:not(.stack){background:linear-gradient(to right,#fff 30%,rgba(255,255,255,0)) left/40px 100% no-repeat local,linear-gradient(to left,#fff 30%,rgba(255,255,255,0)) right/40px 100% no-repeat local,radial-gradient(farthest-side at 100% 50%,rgba(26,26,46,.22),transparent) right/12px 100% no-repeat scroll,#fff}
+  .tbl:not(.stack) table{font-size:13px;background:transparent}
+  .tbl:not(.stack) th,.tbl:not(.stack) td{padding:7px 8px}
+  /* 수식 → 줄바꿈 허용 */
+  .eq{white-space:pre-wrap;word-break:keep-all;font-size:13px;line-height:1.75;padding:12px 14px}
+  .eq .c{display:block;padding-left:1em}
+  .svgbox{position:relative}
+  .svgbox::after{content:"← 좌우로 밀어서 보기 →";display:block;text-align:center;font-size:12px;color:var(--text2);margin-top:6px;position:sticky;left:0}
+  ol.legend{grid-template-columns:1fr}
+  .steps>li{padding-left:34px;margin-left:14px}
+}
+.rev{white-space:nowrap}
+@media print{.rev{display:none}}
 """
 
 JS = r"""
@@ -150,6 +179,10 @@ JS = r"""
     document.querySelectorAll('section.ch,h3[id]').forEach(function(s){io.observe(s);});
   }
 })();
+/* 좁은 화면 표 쌓기 준비: 숫자 칸이 없는 표에 stack 표시, 각 칸에 머리글(data-th) 복사 */
+(function(){document.querySelectorAll('.tbl').forEach(function(t){var tb=t.querySelector('table');if(!tb||!tb.tHead)return;
+ if(tb.querySelector('td.num,th.num'))return;var hs=[].map.call(tb.tHead.rows[0].cells,function(c){return c.textContent.trim()});
+ [].forEach.call(tb.tBodies[0].rows,function(r){[].forEach.call(r.cells,function(c,i){if(hs[i])c.setAttribute('data-th',hs[i])})});t.classList.add('stack');if(hs.length===2)t.classList.add('c2')})})();
 """
 
 
@@ -185,7 +218,7 @@ def render(*, title, desc, eyebrow, h1, sub, ver, date, app_name, pdf, toc, sect
 <div class="badges"><span class="badge acc">매뉴얼 <span style="font-family:var(--font-brand)">__VER__</span></span><a class="badge" href="../index.html">▶ __APP__ 열기</a><a class="badge" href="__PDF__" download>⤓ PDF</a><span class="badge">__DATE__</span><span class="badge">김만민 건축사 · ㈜대성건축사사무소</span></div>
 </div></header>
 <div class="wrap">__TOC__<main>__BODY__</main></div>
-<footer class="foot">© 2026 김만민 건축사 · ㈜대성건축사사무소 · __H1__ __VER__ · __FOOT__</footer>
+<footer class="foot">© 2026 김만민 건축사 · ㈜대성건축사사무소 · __H1__ __VER__ · __FOOT__ <span class="rev">· 화면 대응 개정 2026-10-12</span></footer>
 <div class="pfoot"><span>__H1__ __VER__</span><span>__DATE__</span></div>
 <div id="lb" role="dialog" aria-label="그림 확대"><img alt=""></div>
 <button class="totop" aria-label="맨 위로">↑</button>
