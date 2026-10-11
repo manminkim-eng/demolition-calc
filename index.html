@@ -67,6 +67,7 @@ body{background:#f4f6f9;color:#1a2744;min-height:100vh;}
 .tab-bar{background:transparent;overflow-x:auto;scrollbar-width:none;}   /* 배경은 .hdr-shell 이 담당 */
 .tab-bar::-webkit-scrollbar{display:none;}
 .tab-bar-inner{max-width:1300px;margin:0 auto;padding:4px 24px 0;display:flex;}
+.tb.tb-manual{margin-left:auto;text-decoration:none;white-space:nowrap;}   /* v5.0.6 — 사용자 매뉴얼(탭 막대 오른쪽 끝 · 헤더 버튼 0개 규격 유지) */
 .tb{background:none;border:none;cursor:pointer;color:rgba(255,255,255,.75);font-family:inherit;
   padding:11px 16px;font-size:13px;font-weight:700;letter-spacing:.02em;line-height:19px;
   border-bottom:3px solid transparent;   /* 11+19+11+3 = 44px */
@@ -663,11 +664,11 @@ body{background:#f4f6f9;color:#1a2744;min-height:100vh;}
         <div style="display:flex;gap:11px;align-items:flex-start;background:#f8fafc;border:1.5px solid #e4e9f0;border-left:4px solid #15803d;border-radius:10px;padding:13px 14px;margin-bottom:9px;">
           <div style="min-width:30px;height:30px;background:linear-gradient(135deg,#15803d,#14532d);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#fff;flex-shrink:0;box-shadow:0 2px 8px rgba(21,128,61,.35);">1</div>
           <div style="flex:1;min-width:0;">
-            <div style="font-size:12px;font-weight:900;color:#15803d;margin-bottom:5px;">📋 감리 유형 선택</div>
+            <div style="font-size:12px;font-weight:900;color:#15803d;margin-bottom:5px;">📋 감리 대상 확인</div>
             <div style="font-size:10.5px;color:#374151;line-height:1.85;">
-              ① 상단 탭에서 <strong>「상주 감리」 또는 「비상주 감리」</strong>를 선택합니다.<br>
-              ② <strong>상주 감리:</strong> 해체 허가 대상 현장 — 3,000㎡ 미만(1명), 3,000㎡ 이상(주감리+보조감리 2명).<br>
-              ③ <strong>비상주 감리:</strong> 해체 신고 대상 현장 — 단, 도로·다중이용시설 인접 시 상주로 전환.
+              ① <strong>「📝 산출 입력」 탭</strong>에서 시작합니다. 먼저 해체 허가 대상인지 신고 대상인지 확인합니다.<br>
+              ② <strong>전체 공사기간 감리원 배치:</strong> 해체 허가 대상 — 연면적 3,000㎡ 미만 1명 이상, 3,000㎡ 이상 2명 이상(허가권자가 인정하면 1명).<br>
+              ③ <strong>해체 신고 대상:</strong> 수시 또는 필요한 때 현장 감리 — 다만 특수구조·10톤 이상 장비 탑재·폭파 해체는 감리원 1명 이상을 전체 공사기간 배치.
             </div>
           </div>
         </div>
@@ -693,7 +694,7 @@ body{background:#f4f6f9;color:#1a2744;min-height:100vh;}
             <div style="font-size:10.5px;color:#374151;line-height:1.85;">
               ① <strong>제경비율</strong> 슬라이더를 조정합니다 — 법정 범위 110% ~ 120% (직접인건비 기준).<br>
               ② <strong>기술료율</strong> 슬라이더를 조정합니다 — 법정 범위 20% ~ 40% (인건비+제경비 기준).<br>
-              ③ <strong>직접경비</strong>(숙박·교통·인쇄비 등)와 <strong>손해배상보험료</strong>를 실비 기준으로 입력합니다.<br>
+              ③ <strong>직접경비</strong>(숙박비·인쇄 및 복사비·사무공간 임대비 등)와 <strong>손해배상보험료</strong>를 실비 기준으로 입력합니다.<br>
               ④ 필요 시 <strong>협의 차감액(NEGO)</strong>을 입력하면 공급가액에서 자동 차감됩니다.
             </div>
           </div>
@@ -718,8 +719,8 @@ body{background:#f4f6f9;color:#1a2744;min-height:100vh;}
           <div style="flex:1;min-width:0;">
             <div style="font-size:12px;font-weight:900;color:#1d4ed8;margin-bottom:5px;">🖨️ 결과 출력 및 저장</div>
             <div style="font-size:10.5px;color:#374151;line-height:1.85;">
-              ① 상단 헤더의 <strong>🖨️ 인쇄 버튼</strong>을 클릭하면 A4 보고서 형식으로 출력·PDF 저장됩니다.<br>
-              ② 보고서에는 <strong>공사명·기준일·감리원별 산출 내역·법정 근거</strong>가 포함됩니다.<br>
+              ① 「📄 산출서 미리보기」 탭의 <strong>🖨️ 인쇄 / PDF 저장</strong> · <strong>🖼️ JPG 저장</strong> 버튼으로 A4 산출서를 출력합니다.<br>
+              ② 산출서에는 <strong>공사명·작성일·감리원별 산출 내역·산출 근거</strong>가 포함됩니다.<br>
               ③ PWA 설치: 브라우저 주소창 아이콘 또는 iOS Safari → 공유 → 홈 화면에 추가.
             </div>
           </div>
@@ -737,12 +738,12 @@ body{background:#f4f6f9;color:#1a2744;min-height:100vh;}
             <div class="fml-note">등급·일수·요율 변경 즉시 상단 배너 총액이 실시간 갱신됩니다. 별도의 계산 버튼 없이 입력값을 변경하기만 하면 됩니다.</div>
           </div>
           <div class="fml-card" style="border-left:3px solid #16a34a;">
-            <div class="fml-card-ttl" style="color:#16a34a;">⚠️ 3단계 인일수 합산 필수</div>
-            <div class="fml-note">① 사전 검토 + ② 실제 해체 + ③ 완료 보고 3단계를 모두 합산해야 합니다. 본 공사 기간만 입력하면 직접인건비가 누락됩니다.</div>
+            <div class="fml-card-ttl" style="color:#16a34a;">⚠️ 3단계 인일수 합산</div>
+            <div class="fml-note">① 사전 검토 + ② 실제 해체 + ③ 완료 보고 일수를 빠뜨리지 않도록 합산합니다. 투입 일수는 감리계약으로 정합니다.</div>
           </div>
           <div class="fml-card" style="border-left:3px solid #e63312;">
             <div class="fml-card-ttl" style="color:#e63312;">⚠️ VAT 과소 산출 주의</div>
-            <div class="fml-note">손해배상보험료를 제외하고 VAT를 계산하면 과소 산출로 법적 분쟁 원인이 됩니다. 공급가액에 보험료를 반드시 포함하세요.</div>
+            <div class="fml-note">공급가액은 명목과 상관없이 받는 대가 전부입니다(부가가치세법 제29조제3항). 손해배상보험료도 공급가액에 넣은 뒤 10%를 계산합니다.</div>
           </div>
         </div>
 
@@ -750,9 +751,10 @@ body{background:#f4f6f9;color:#1a2744;min-height:100vh;}
         <div class="fml-hi" style="margin-top:4px;">
           <div class="fml-card-ttl" style="color:#15803d;">📌 주요 법적 근거</div>
           <div class="fml-note" style="font-size:10.5px;line-height:2.1;">
-            <strong>건축물관리법 제30~32조</strong> — 해체공사 감리 의무 및 감리자 지정<br>
-            <strong>국토교통부 고시</strong> — 해체계획서 작성 및 감리업무 기준 · 감리비 산출 공식<br>
-            <strong>건설기술진흥법</strong> — 손해배상보험료 감리비 계상 의무<br>
+            <strong>건축물관리법 제30조~제32조</strong> — 해체 허가·신고 · 해체공사감리자 지정(제31조) · 감리자 업무(제32조)<br>
+            <strong>건축물관리법 시행규칙 제13조제4항</strong> — 해체공사 감리비용 산정 방법(요율 · 실비정액가산)<br>
+            <strong>국토교통부고시 제2022-446호</strong>(2022.8.4. 시행) 제23조 — 감리대가 기준 · 별표 2 요율<br>
+            <strong>건축사법 제20조제3항 · 건설기술 진흥법 제34조제2항</strong> — 공공 발주자의 손해배상 보험(공제) 비용 계상<br>
             <strong>2026년 기준노임</strong> — 한국엔지니어링협회 2025.12.29 공표 · 2026.01.01 적용
           </div>
         </div>
@@ -764,12 +766,12 @@ body{background:#f4f6f9;color:#1a2744;min-height:100vh;}
         <div class="fml-sec-ttl">법적 토대</div>
         <div class="fml-g2">
           <div class="fml-card">
-            <div class="fml-card-ttl">「건축물관리법 시행규칙」</div>
-            <div class="fml-note">해체공사 감리의 의무와 안전 관리 체계를 규정하는 <b>상위 법령</b>. 건축물관리법 제30조~제32조에 근거하여 허가 대상 건축물은 반드시 감리자를 지정해야 합니다.</div>
+            <div class="fml-card-ttl">건축물관리법 · 시행규칙</div>
+            <div class="fml-note">허가권자는 해체허가를 받은 건축물에 <b>해체공사감리자를 지정</b>합니다(법 제31조제1항). 감리비용 산정 방법은 <b>시행규칙 제13조제4항</b>이 정합니다.</div>
           </div>
           <div class="fml-card">
             <div class="fml-card-ttl">국토교통부 고시</div>
-            <div class="fml-note">「건축물 해체계획서의 작성 및 감리업무 등에 관한 기준」. 실제 감리비 산출 공식과 요율의 <b>직접적 근거</b>입니다.</div>
+            <div class="fml-note">「건축물 해체계획서의 작성 및 감리업무 등에 관한 기준」 국토교통부고시 제2022-446호(2022.8.4. 시행). <b>제23조</b>가 요율(별표 2)과 실비정액가산방식의 직접적 근거입니다.</div>
           </div>
         </div>
 
@@ -778,16 +780,16 @@ body{background:#f4f6f9;color:#1a2744;min-height:100vh;}
           <div class="fml-card">
             <div style="font-size:11px;font-weight:900;color:#1d4ed8;margin-bottom:8px;padding:6px 10px;background:#f0fdf4;border-radius:6px;">요율 방식</div>
             <table class="fml-flow">
-              <tr><td>대상</td><td>공공기관 발주 / 비상주 감리 현장</td></tr>
-              <tr><td>산출</td><td>예정 공사비 × 국토교통부 고시 요율</td></tr>
-              <tr><td>예시</td><td>5천만 원↓ 4.53% / 1억 원↓ 4.28%</td></tr>
-              <tr><td>조정</td><td>난이도에 따라 ±10% 가감 가능</td></tr>
+              <tr><td>대상</td><td>공공 관리자(중앙행정기관 · 지방자치단체 · 공공기관)가 고를 수 있는 방법 ①</td></tr>
+              <tr><td>산출</td><td>해체공사비 × 고시 별표 2 요율</td></tr>
+              <tr><td>예시</td><td>5천만원 미만 4.53% / 1억원 미만 4.28% (구간 사이는 직선보간)</td></tr>
+              <tr><td>조정</td><td>난이도 등에 따라 요율의 10% 범위 내 조정(제23조제2항)</td></tr>
             </table>
           </div>
           <div class="fml-card">
-            <div style="font-size:11px;font-weight:900;color:#ea580c;margin-bottom:8px;padding:6px 10px;background:#fff7ed;border-radius:6px;">실비정액가산 방식 ★ 민간 표준</div>
+            <div style="font-size:11px;font-weight:900;color:#ea580c;margin-bottom:8px;padding:6px 10px;background:#fff7ed;border-radius:6px;">실비정액가산 방식 ★ 이 프로그램</div>
             <table class="fml-flow">
-              <tr><td>대상</td><td>민간 해체공사 / 상주 감리 현장</td></tr>
+              <tr><td>대상</td><td>공공 관리자가 고를 수 있는 방법 ② — 그 밖의 관리자는 참고해 정할 수 있음(시행규칙 제13조제5항)</td></tr>
               <tr><td>산출</td><td>실제 투입 기술자의 인건비 + 경비 합산</td></tr>
               <tr><td>가치</td><td>정량적 데이터 기반의 투명한 예산 수립</td></tr>
               <tr><td>구성</td><td>직접인건비 + 직접경비 + 제경비 + 기술료</td></tr>
@@ -797,7 +799,7 @@ body{background:#f4f6f9;color:#1a2744;min-height:100vh;}
 
         <div class="fml-sec-ttl" style="margin-top:18px;">실비정액가산 4대 구성 요소</div>
         <code class="fml-eq">[ 1 ] 직접인건비 = 인원수 × 기술등급별 노임단가</code>
-        <code class="fml-eq" style="border-left-color:#475569;background:#f8fafd;color:#475569;">[ 2 ] 직접경비 = 숙박비 + 교통비 + 인쇄비 + 임대료 (실비 정산)</code>
+        <code class="fml-eq" style="border-left-color:#475569;background:#f8fafd;color:#475569;">[ 2 ] 직접경비 = 숙박비 + 인쇄 및 복사비 + 사무공간 임대비 등 (실제 소요비용)</code>
         <code class="fml-eq">[ 3 ] 제경비 = 직접인건비 × 110%~120%  ← 법정 범위</code>
         <code class="fml-eq org">[ 4 ] 기술료 = (직접인건비 + 제경비) × 20%~40%  ← 법정 범위</code>
       </div>
@@ -814,17 +816,17 @@ body{background:#f4f6f9;color:#1a2744;min-height:100vh;}
         <div class="fml-card">
           <div class="fml-card-ttl">STEP 2 — 제경비</div>
           <code class="fml-eq">직접인건비 × <span style="color:#e63312;">제경비율(110~120%)</span> = 제경비</code>
-          <div class="fml-note"><b>법정 범위 110%~120%, 임의 변경 불가.</b> 행정/관리직 급여 등 간접비.</div>
+          <div class="fml-note"><b>고시 범위 110%~120%</b>(제23조제4항제3호). 임원·서무·경리직원 급여 등 간접비.</div>
         </div>
         <div class="fml-card">
           <div class="fml-card-ttl">STEP 3 — 기술료</div>
           <code class="fml-eq org">(직접인건비 + 제경비) × <span style="color:#c2410c;">기술료율(20~40%)</span> = 기술료</code>
-          <div class="fml-note"><b>법정 범위 20%~40%.</b> 감리자의 기술 사용 및 이윤에 대한 대가.</div>
+          <div class="fml-note"><b>고시 범위 20%~40%</b>(제23조제4항제4호). 기술의 사용 및 기술축적 대가 · 이윤 등.</div>
         </div>
         <div class="fml-card">
           <div class="fml-card-ttl">STEP 4 — 직접경비 · 손해배상보험료</div>
-          <code class="fml-eq" style="border-left-color:#475569;background:#f8fafd;color:#475569;">여비 + 인쇄비 + 교통비 등 실비  +  손해배상공제료 실불입액</code>
-          <div class="fml-note">실비 정산 항목. 발주자는 <b>손해배상보험료를 감리비에 반드시 계상</b>해야 합니다 (건설기술진흥법).</div>
+          <code class="fml-eq" style="border-left-color:#475569;background:#f8fafd;color:#475569;">숙박비 + 인쇄 및 복사비 + 사무공간 임대비 등 실비  +  손해배상공제료 실불입액</code>
+          <div class="fml-note">실비 정산 항목. 공공 발주자는 <b>손해배상 보험(공제) 가입 비용을 용역비용에 계상</b>합니다(건축사법 제20조제3항 · 건설기술 진흥법 제34조제2항).</div>
         </div>
         <div class="fml-card">
           <div class="fml-card-ttl">NEGO — 협의 차감</div>
@@ -839,7 +841,7 @@ body{background:#f4f6f9;color:#1a2744;min-height:100vh;}
         <div class="fml-card">
           <div class="fml-card-ttl">STEP 6 — 부가가치세 (선택)</div>
           <code class="fml-eq grn">공급가액 × 10% = VAT</code>
-          <div class="fml-note">⚠ 손해배상보험료를 제외하고 계산하면 <b>과소 산출</b>됩니다.</div>
+          <div class="fml-note">⚠ 손해배상보험료를 제외하고 계산하면 <b>과소 산출</b>됩니다(부가가치세법 제29조제3항).</div>
         </div>
 
         <div class="fml-hi dark" style="margin-top:14px;">
@@ -876,25 +878,25 @@ body{background:#f4f6f9;color:#1a2744;min-height:100vh;}
 
       <!-- ── 탭 3: 배치 기준 ── -->
       <div class="fml-panel" id="sec-deploy">
-        <div class="fml-sec-ttl">상주 vs 비상주 판별 기준</div>
+        <div class="fml-sec-ttl">감리원 배치 기준 (시행령 제23조의2)</div>
         <div class="fml-card">
-          <div style="font-size:11px;font-weight:900;color:#1d4ed8;margin-bottom:8px;padding:6px 10px;background:#f0fdf4;border-radius:6px;">해체 허가 대상 — 상주 감리 의무 (전체 공사 기간)</div>
+          <div style="font-size:11px;font-weight:900;color:#1d4ed8;margin-bottom:8px;padding:6px 10px;background:#f0fdf4;border-radius:6px;">해체 허가 대상 — 감리원을 전체 해체공사 기간 동안 배치</div>
           <table class="fml-flow">
             <tr><td>3,000㎡ 미만</td><td>감리원 <b>1명 이상</b> 배치</td></tr>
-            <tr><td>3,000㎡ 이상</td><td>감리원 <b>2명 이상</b> 배치 (주감리 + 보조감리)</td></tr>
+            <tr><td>3,000㎡ 이상</td><td>감리원 <b>2명 이상</b> 배치 — 관리자 요청으로 허가권자가 인정하면 1명</td></tr>
           </table>
         </div>
         <div class="fml-card" style="margin-top:8px;">
-          <div style="font-size:11px;font-weight:900;color:#64748b;margin-bottom:8px;padding:6px 10px;background:#f1f5f9;border-radius:6px;">해체 신고 대상 — 원칙적 비상주 감리</div>
-          <div class="fml-note" style="margin-bottom:8px;">비상주 감리를 기본으로 합니다.</div>
+          <div style="font-size:11px;font-weight:900;color:#64748b;margin-bottom:8px;padding:6px 10px;background:#f1f5f9;border-radius:6px;">해체 신고 대상 — 수시 또는 필요한 때 현장 감리</div>
+          <div class="fml-note" style="margin-bottom:8px;">해체공사감리자는 수시 또는 필요한 때 현장에서 감리업무를 수행합니다(법 제31조제3항).</div>
           <div class="fml-hi org">
-            <div style="font-size:11px;font-weight:800;color:#c2410c;margin-bottom:5px;">⚠ 예외 조항 — 아래 해당 시 상주 감리 의무로 전환</div>
-            <div class="fml-note">· 폭 15m 이상 도로 인접<br/>· 버스정류장, 횡단보도 등 다중이용시설 인접</div>
+            <div style="font-size:11px;font-weight:800;color:#c2410c;margin-bottom:5px;">⚠ 신고 대상이라도 전체 공사기간 배치(1명 이상) — 시행령 제21조제6항</div>
+            <div class="fml-note">· 특수구조 건축물 · 10톤 이상 장비를 올려 해체 · 폭파 해체<br/>· 주변에 조례로 정하는 시설(버스 정류장 · 도시철도 역사 출입구 · 횡단보도 등)이나 조례로 정하는 폭 이상의 도로가 있으면 신고가 아니라 <b>해체 허가 대상</b>(법 제30조제2항)</div>
           </div>
         </div>
 
         <div class="fml-sec-ttl" style="margin-top:18px;">인일수(Man-days) 산정 — 숨겨진 투입 기간</div>
-        <div class="fml-note" style="margin-bottom:10px;">'현장 철거 기간'만 계상하면 직접인건비가 심각하게 누락됩니다. 아래 3단계를 모두 합산해야 합법적입니다.</div>
+        <div class="fml-note" style="margin-bottom:10px;">'현장 철거 기간'만 계상하면 사전 검토와 완료 보고에 들어가는 일수가 빠집니다. 아래 3단계를 합산해 감리계약에 반영합니다.</div>
         <div class="fml-timeline">
           <div class="fml-tl-item o1"><div class="fml-tl-num">①</div><div class="fml-tl-label">사전 검토</div><div class="fml-tl-desc">해체계획서 검토<br/>현장 점검</div></div>
           <div class="fml-tl-item c1"><div class="fml-tl-num">②</div><div class="fml-tl-label">실제 해체공사</div><div class="fml-tl-desc">현장 상주<br/>안전·환경 관리</div></div>
@@ -902,7 +904,7 @@ body{background:#f4f6f9;color:#1a2744;min-height:100vh;}
         </div>
         <code class="fml-eq" style="text-align:center;font-size:13px;font-weight:900;margin-top:8px;">총 투입 일수 (인일수) = ① + ② + ③</code>
         <div class="fml-hi org" style="margin-top:8px;text-align:center;">
-          <div class="fml-note">⚠ Phase 2(본 공사)만 산정하면 감리 법인의 막대한 영업 손실 발생.<br/><b>3단계 전체를 반드시 합산하십시오.</b></div>
+          <div class="fml-note">⚠ 본 공사 기간만 산정하면 사전 검토 · 완료 보고 일수가 빠집니다.<br/><b>3단계 일수를 합산해 계약에 반영하십시오.</b></div>
         </div>
       </div>
 
@@ -910,18 +912,18 @@ body{background:#f4f6f9;color:#1a2744;min-height:100vh;}
       <div class="fml-panel" id="sec-caution">
         <div class="fml-sec-ttl red">부가가치세 산출 주의</div>
         <div class="fml-hi org">
-          <div style="font-size:11px;font-weight:800;color:#c2410c;margin-bottom:6px;">⚠ 치명적 실수 — 잘못된 공식</div>
-          <div class="fml-note">손해배상보험료를 <b>제외하고</b> 부가세를 계산하는 관행 → <b>과소 산출</b>로 법적 분쟁의 원인</div>
+          <div style="font-size:11px;font-weight:800;color:#c2410c;margin-bottom:6px;">⚠ 잘못된 공식</div>
+          <div class="fml-note">손해배상보험료를 <b>제외하고</b> 부가세를 계산 → <b>과소 산출</b></div>
           <code class="fml-eq red" style="margin-top:8px;">(직접비 + 제경비 + 기술료) × 10%  ← ❌ 잘못된 공식</code>
         </div>
         <div class="fml-hi grn" style="margin-top:8px;">
-          <div style="font-size:11px;font-weight:800;color:#15803d;margin-bottom:6px;">✓ 올바른 공식 (관련 법령 및 세법 기준)</div>
+          <div style="font-size:11px;font-weight:800;color:#15803d;margin-bottom:6px;">✓ 올바른 공식 (부가가치세법 제29조제3항)</div>
           <code class="fml-eq grn">(직접비 + 제경비 + 기술료 + <b>손해배상보험료</b>) × 10%  ← ✅ 올바른 공식</code>
-          <div class="fml-note" style="margin-top:6px;">발주자는 감리자의 손해배상보험(공제)료를 감리비에 <b>반드시 계상</b>해야 합니다.</div>
+          <div class="fml-note" style="margin-top:6px;">공공 발주자는 손해배상 보험(공제) 가입 비용을 용역비용에 계상합니다(건축사법 제20조제3항 · 건설기술 진흥법 제34조제2항).</div>
         </div>
 
-        <div class="fml-sec-ttl" style="margin-top:20px;">추가 실비 청구의 3가지 합법적 조건</div>
-        <div class="fml-note" style="margin-bottom:10px;">단순 변심이 아닌 <b>객관적 상황 변화</b> 발생 시 별도 실비 청구가 가능합니다.</div>
+        <div class="fml-sec-ttl" style="margin-top:20px;">추가업무비용 — 별도 실비 계상 (예시)</div>
+        <div class="fml-note" style="margin-bottom:10px;">해체공사 감리업무에 포함되지 않는 <b>추가업무비용은 별도의 실비로 계상</b>합니다(고시 제23조제3항). 아래는 추가 업무의 예시이며, 범위는 감리계약으로 정합니다.</div>
         <div class="fml-card">
           <table class="fml-flow">
             <tr><td>①</td><td><b>전면 재검토</b> — 설계도서와 현장 불일치로 인한 해체 계획의 전면 재검토가 필요한 경우</td></tr>
@@ -989,7 +991,7 @@ body{background:#f4f6f9;color:#1a2744;min-height:100vh;}
     </div>
     <div class="hdr-right-wrap">
       <!-- v5.0-HDR — 마스터 4줄(13/11/11/10) · 원본 A4 산출근거 문구에서 발췌 -->
-      <div class="hdr-right"><strong>건축물관리법 제30조~제32조</strong><br/>해체공사 감리자 지정 · 감리대가 산출<br/>국토교통부 고시 · 실비정액가산방식<br/><em>[2026년 기준노임 적용]</em></div>
+      <div class="hdr-right"><strong>건축물관리법 제30조~제32조</strong><br/>시행규칙 제13조제4항 · 감리비용 산정<br/>국토교통부고시 제2022-446호 제23조<br/><em>[2026년 기준노임 적용]</em></div>
       <!-- v5.0 : 헤더 버튼 없음. 설치는 PWA 배너가, 인쇄·JPG 는 산출서 탭 출력바가, 계산식 안내는 FAB 이 담당한다(§3-1 · §18-1). -->
     </div>
   </div>
@@ -1002,6 +1004,7 @@ body{background:#f4f6f9;color:#1a2744;min-height:100vh;}
     <button class="tb tab-btn active" data-tab="input" onclick="switchTab('input')">📝 산출 입력</button>
     <button class="tb tab-btn" data-tab="result" onclick="switchTab('result')">📄 산출서 미리보기</button>
     <button class="tb tab-btn" data-tab="reference" onclick="switchTab('reference')">⚖️ 법적 근거·요율</button>
+    <a class="tb tb-manual" href="https://manminkim-eng.github.io/demolition-calc/manual/" target="_blank" rel="noopener" title="사용자 매뉴얼 (새 창)" onclick="if(navigator.onLine===false){event.preventDefault();mmToast('매뉴얼은 인터넷 연결 시 열립니다');}">📘 매뉴얼</a>
   </div>
 </nav>
 </div><!-- /.hdr-shell -->
@@ -1027,7 +1030,7 @@ body{background:#f4f6f9;color:#1a2744;min-height:100vh;}
     <div class="law-strip no-print">
       <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
       <div class="law-strip-text">
-        <strong>건축물관리법 시행규칙 · 국토교통부 고시 「건축물 해체계획서의 작성 및 감리업무 등에 관한 기준」</strong> — 해체 허가 대상 건축물은 반드시 상주 감리자를 지정해야 하며 (건축물관리법 제30조~제32조), 그 대가는 <strong>실비정액가산방식</strong>으로 산출합니다.
+        <strong>건축물관리법 제31조 · 시행규칙 제13조제4항 · 국토교통부고시 제2022-446호 제23조</strong> — 해체 허가 대상 건축물은 감리원을 전체 해체공사 기간 동안 배치하며, 이 프로그램은 감리비용을 <strong>실비정액가산방식</strong>으로 산출합니다.
       </div>
     </div>
 
@@ -1217,7 +1220,7 @@ body{background:#f4f6f9;color:#1a2744;min-height:100vh;}
           <p class="a4-sign-date" id="r-date2">-</p>
           <div class="a4-sign-legal">
             <p class="lbl">산출 근거 (건축물관리법)</p>
-            <p>건축물관리법 제30조 내지 제32조에 의거, 해체 허가 대상 건축물은 반드시 해체공사 감리자를 지정해야 하며, 그 대가는 국토교통부 고시 「건축물 해체계획서의 작성 및 감리업무 등에 관한 기준」을 따릅니다. 최종 합계 금액은 원 단위 절삭(천 단위 미만)되어 산출되었습니다. 실제 계약 시 제반 조건에 따라 변동될 수 있습니다.</p>
+            <p>건축물관리법 제31조에 따라 해체 허가 대상 건축물에는 해체공사감리자를 지정하며, 감리비용은 같은 법 시행규칙 제13조제4항제2호와 「건축물 해체계획서의 작성 및 감리업무 등에 관한 기준」(국토교통부고시 제2022-446호) 제23조제4항의 실비정액가산방식으로 산출하였습니다. 최종 합계 금액은 원 단위 절삭(천 단위 미만)되어 산출되었습니다. 실제 계약 시 제반 조건에 따라 변동될 수 있습니다.</p>
           </div>
           <div class="a4-sign-supervisor">
             <span class="name">감 리 자 :</span>
@@ -1239,9 +1242,9 @@ body{background:#f4f6f9;color:#1a2744;min-height:100vh;}
       <div class="ref-block">
         <div class="ref-block-header"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>법적 근거</div>
         <div class="ref-block-body">
-          <div style="margin-bottom:10px;"><div style="font-size:12px;font-weight:800;color:#15803d;margin-bottom:4px;">「건축물관리법 시행규칙」</div><div style="font-size:11px;color:#64748b;line-height:1.7;">감리 의무화 및 대가 산정의 최상위 법적 근거. 건축물관리법 제30조~제32조에 의거하여 해체 허가 대상 건축물은 반드시 감리자를 지정해야 합니다.</div></div>
-          <div style="border-top:1px solid #eef1f6;padding-top:10px;margin-bottom:10px;"><div style="font-size:12px;font-weight:800;color:#15803d;margin-bottom:4px;">국토교통부 고시 「건축물 해체계획서의 작성 및 감리업무 등에 관한 기준」</div><div style="font-size:11px;color:#64748b;line-height:1.7;">실제 현장에서 적용해야 하는 구체적 산출 공식 및 배치 기준 제시.</div></div>
-          <div class="warn-box"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div style="font-size:11px;color:#92400e;font-weight:600;line-height:1.7;">모든 감리비 산출은 이 두 가지 법적 프레임워크 내에서 엄격히 통제됩니다.</div></div>
+          <div style="margin-bottom:10px;"><div style="font-size:12px;font-weight:800;color:#15803d;margin-bottom:4px;">건축물관리법 제31조 · 시행규칙 제13조제4항</div><div style="font-size:11px;color:#64748b;line-height:1.7;">허가권자는 해체허가를 받은 건축물에 해체공사감리자를 지정합니다. 공공 관리자의 감리비용은 요율 또는 실비정액가산방식으로 산정하고, 그 밖의 관리자는 이를 참고해 정할 수 있습니다.</div></div>
+          <div style="border-top:1px solid #eef1f6;padding-top:10px;margin-bottom:10px;"><div style="font-size:12px;font-weight:800;color:#15803d;margin-bottom:4px;">국토교통부고시 제2022-446호 「건축물 해체계획서의 작성 및 감리업무 등에 관한 기준」</div><div style="font-size:11px;color:#64748b;line-height:1.7;">2022.8.4. 시행. 제23조 — 별표 2 요율, 직접인건비 · 직접경비 · 제경비(110~120%) · 기술료(20~40%).</div></div>
+          <div class="warn-box"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div style="font-size:11px;color:#92400e;font-weight:600;line-height:1.7;">감리원 배치기준은 건축물관리법 시행령 제23조의2에 있습니다.</div></div>
         </div>
       </div>
       <div class="ref-block">
@@ -1278,22 +1281,22 @@ body{background:#f4f6f9;color:#1a2744;min-height:100vh;}
 
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;" class="mb16 ref-two-col">
       <div class="ref-block">
-        <div class="ref-block-header"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>감리원 법정 배치 기준</div>
+        <div class="ref-block-header"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>감리원 배치 기준 (시행령 제23조의2)</div>
         <div class="ref-block-body">
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
-            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:10px;font-weight:700;color:#1d4ed8;margin-bottom:4px;">해체 허가 대상</div><div style="font-size:11px;color:#1e40af;line-height:1.6;">상주 감리 의무<br/>(전체 공사 기간)</div></div>
-            <div style="background:#f8fafd;border:1px solid #dde3ed;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:10px;font-weight:700;color:#64748b;margin-bottom:4px;">해체 신고 대상</div><div style="font-size:11px;color:#4a5568;line-height:1.6;">원칙적 비상주 감리<br/>(예외 있음)</div></div>
+            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:10px;font-weight:700;color:#1d4ed8;margin-bottom:4px;">해체 허가 대상</div><div style="font-size:11px;color:#1e40af;line-height:1.6;">감리원 배치<br/>(전체 해체공사 기간)</div></div>
+            <div style="background:#f8fafd;border:1px solid #dde3ed;border-radius:8px;padding:12px;text-align:center;"><div style="font-size:10px;font-weight:700;color:#64748b;margin-bottom:4px;">해체 신고 대상</div><div style="font-size:11px;color:#4a5568;line-height:1.6;">수시 · 필요한 때 감리<br/>(예외 있음)</div></div>
           </div>
           <div class="ref-item"><span style="font-size:11px;color:#4a5568;font-weight:600;">연면적 3,000㎡ 미만</span><span style="font-size:11px;font-weight:800;color:#15803d;">1명 이상 배치</span></div>
-          <div class="ref-item"><span style="font-size:11px;color:#4a5568;font-weight:600;">연면적 3,000㎡ 이상</span><span style="font-size:11px;font-weight:800;color:#15803d;">2명 이상 배치 (주+보조)</span></div>
-          <div style="margin-top:8px;background:#fff8f5;border:1px solid #fdba74;border-radius:6px;padding:8px 10px;font-size:10px;color:#92400e;line-height:1.7;">⚠ 다중이용시설 인접 또는 폭 15m 이상 도로 인접 시 → 허가권자 판단 하에 상주 감리 전환 가능</div>
+          <div class="ref-item"><span style="font-size:11px;color:#4a5568;font-weight:600;">연면적 3,000㎡ 이상</span><span style="font-size:11px;font-weight:800;color:#15803d;">2명 이상 배치 (허가권자 인정 시 1명)</span></div>
+          <div style="margin-top:8px;background:#fff8f5;border:1px solid #fdba74;border-radius:6px;padding:8px 10px;font-size:10px;color:#92400e;line-height:1.7;">⚠ 조례로 정하는 시설(버스 정류장 · 횡단보도 등)이나 조례로 정하는 폭 이상의 도로가 주변에 있으면 해체 허가 대상(법 제30조제2항) · 신고 대상 중 특수구조 · 10톤 이상 장비 탑재 · 폭파 해체는 1명 이상 전체 기간 배치(시행령 제23조의2)</div>
         </div>
       </div>
       <div class="ref-block">
         <div class="ref-block-header"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>VAT 과세표준 주의사항</div>
         <div class="ref-block-body">
           <div class="bad-box"><div style="font-size:11px;font-weight:800;color:#ea580c;margin-bottom:6px;">⚠ 잘못된 공식</div><div style="font-size:11px;color:#92400e;line-height:1.7;">손해배상보험료를 제외하고 부가세 계산 → 과소 산출</div></div>
-          <div class="good-box"><div style="font-size:11px;font-weight:800;color:#15803d;margin-bottom:6px;">✓ 올바른 공식</div><div style="font-size:11px;color:#166534;line-height:1.7;font-weight:600;">(직접비 + 제경비 + 기술료 + 손해배상보험료) × 10%</div><div style="font-size:10px;color:#16a34a;margin-top:6px;">관련 세법 및 유권해석 기준</div></div>
+          <div class="good-box"><div style="font-size:11px;font-weight:800;color:#15803d;margin-bottom:6px;">✓ 올바른 공식</div><div style="font-size:11px;color:#166534;line-height:1.7;font-weight:600;">(직접비 + 제경비 + 기술료 + 손해배상보험료) × 10%</div><div style="font-size:10px;color:#16a34a;margin-top:6px;">부가가치세법 제29조제3항 — 공급가액은 받는 대가 전부</div></div>
         </div>
       </div>
     </div>
@@ -1318,6 +1321,8 @@ body{background:#f4f6f9;color:#1a2744;min-height:100vh;}
 const RATES={professional:467217,special:373353,high:310884,middle:295138,low:235459,none:0};
 const GRADE_NAMES={professional:'건축사',special:'특급',high:'고급',middle:'중급',low:'초급',none:'-'};
 const fmt=v=>Math.floor(v).toLocaleString();
+/* v5.0.6 — 금액 × 요율(%) 원 미만 절사: 곱을 먼저 구한 뒤 100으로 나눈다(일수 0.5 단위까지 곱이 정확) */
+function mmPct(a,p){return Math.floor(Math.round(a*p*2)/2/100);}
 
 /* ══ 날짜 자동 설정 ══ */
 function getTodayISO(){
@@ -1377,10 +1382,10 @@ function recalc(){
   const l1=RATES[g1]*d1, l2=RATES[g2]*d2;
   const labor=l1+l2;
   const days=Math.max(d1,d2);
-  const over=Math.floor(labor*(oR/100));
-  const tech=Math.floor((labor+over)*(tR/100));
+  const over=mmPct(labor,oR);   /* v5.0.6 — 정수 곱 뒤 나눗셈(부동소수 오차로 1원·1,000원 적게 나오던 문제) */
+  const tech=mmPct(labor+over,tR);
   const sub=labor+over+tech+de+ins-neg;
-  const vatAmt=vat?Math.floor(sub*.1):0;
+  const vatAmt=vat?mmPct(sub,10):0;
   const total=Math.floor((sub+vatAmt)/1000)*1000;
 
   document.getElementById('banner-desc').textContent=`감리기간 ${days}일 · 감리원 ${g2==='none'?1:2}인 · ${vat?'VAT 포함':'VAT 제외'}`;
