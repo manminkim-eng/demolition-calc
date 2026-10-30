@@ -37,7 +37,7 @@ const mmMatch = (req, opt) => caches.keys()
   .then((ks) => ks.reduce((p, k) => p.then((r) => r || caches.open(k).then((c) => c.match(req, opt))), Promise.resolve(undefined)))
   .then((r) => (r && r.type === 'opaque' && req && req.mode === 'cors') ? undefined : r);
 
-const CACHE  = 'demolish-v5.0.8';   /* 2026-09-03 v5.0 디자인 통일 */
+const CACHE  = 'demolish-v5.0.9';   /* 2026-09-03 v5.0 디자인 통일 */
 const ORPHAN = ['demolish-v3.0'];
 const ASSETS = [
   './',
