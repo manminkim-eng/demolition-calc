@@ -1,5 +1,10 @@
 # 건축물 해체공사 감리대가 산출기 [MANMIN-Ver5.0]
 
+## v6.1.0 (2026-11-12) — 검색 설명 메타 · 판 6.1
+
+- `<meta name="description">` 추가(og:description 과 같은 문구) — 검색 결과 설명 칸이 비던 문제(정밀검토 B15 · 작업지시서 §25-6-75).
+- 화면 · 계산서 판 표기 Ver-6.1 · sw `demolish-v6.1.0` · 계산 · 인쇄 · MM-PRINT 구간 · 사용자 매뉴얼 변경 없음.
+
 > 건축물관리법 시행규칙 제13조제4항제2호 — 실비정액가산방식(직접인건비 + 직접경비 + 제경비 + 기술료)으로 해체공사 감리비용을 산출하는 PWA
 > https://manminkim-eng.github.io/demolition-calc/ · 사용자 매뉴얼 https://manminkim-eng.github.io/demolition-calc/manual/
 
