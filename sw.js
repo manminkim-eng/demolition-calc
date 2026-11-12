@@ -1,4 +1,5 @@
 /* ═══════════════════════════════════════════════════
+   v6.1.2 (2026-11-12) — html2canvas 1.4.1 머리 태그 SRI(integrity sha384 · crossorigin) · 공통 인쇄 원본 MM-PRINT v1.0 → v1.1(지연 로더도 SRI)(정밀검토 B8 · html2canvas SRI) — 화면 · 계산 · 인쇄 불변 · 작업지시서 §25-6-87 · 캐시명 v6.1.2 (종전 v6.1.1)
    v6.1.1 (2026-11-12) — Pretendard CSS SRI(integrity · crossorigin)(정밀검토 C2) — 화면 · 계산 · 인쇄 불변 · 작업지시서 §25-6-82 · 캐시명 v6.1.1 (종전 v6.1.0)
    v6.1.0 (2026-11-12) — 검색 설명 메타(description) 추가(정밀검토 B15 · 작업지시서 §25-6-75) · 판 6.1 · 캐시명 v6.1.0 (종전 demolish-v5.0.17)
    v5.0.6 2026-10-11 — 사용자 매뉴얼 연결(탭 막대 📘 매뉴얼) · 근거 표기 정정 · 금액 정수 연산 동반 캐시명 v5.0.6
@@ -39,7 +40,7 @@ const mmMatch = (req, opt) => caches.keys()
   .then((ks) => ks.reduce((p, k) => p.then((r) => r || caches.open(k).then((c) => c.match(req, opt))), Promise.resolve(undefined)))
   .then((r) => (r && r.type === 'opaque' && req && req.mode === 'cors') ? undefined : r);
 
-const CACHE  = 'demolish-v6.1.1';   /* 2026-09-03 v5.0 디자인 통일 */
+const CACHE  = 'demolish-v6.1.2';   /* 2026-09-03 v5.0 디자인 통일 */
 const ORPHAN = ['demolish-v3.0'];
 const ASSETS = [
   './',
