@@ -1,5 +1,10 @@
 # 건축물 해체공사 감리대가 산출기 [MANMIN-Ver5.0]
 
+## v6.1.1 (2026-11-12) — CDN 판 통일 · SRI(정밀검토 C2)
+
+- Pretendard CSS SRI(integrity · crossorigin)(정밀검토 C2) — 화면 · 계산 · 인쇄 불변 · 작업지시서 §25-6-82.
+- sw 캐시명 v6.1.1 · MM-PRINT · MM-PROJECT 구간 · 사용자 매뉴얼 변경 없음.
+
 ## v6.1.0 (2026-11-12) — 검색 설명 메타 · 판 6.1
 
 - `<meta name="description">` 추가(og:description 과 같은 문구) — 검색 결과 설명 칸이 비던 문제(정밀검토 B15 · 작업지시서 §25-6-75).
