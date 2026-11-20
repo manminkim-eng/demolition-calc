@@ -11,6 +11,6 @@ for f in sorted(glob.glob(raw+'/s*.png')): Image.open(f).convert('RGB').save(M+'
 shutil.copy(raw+'/_marks.json',M+'/images/_marks.json'); shutil.copy(raw+'/_example.json',M+'/_tools/_example.json')
 PY
 MANUAL_DIR="$M" python3 gen_manual_demol.py
-node pdf_demol.js "$M" DEMOL_사용자매뉴얼_Ver-5.0.pdf "건축물 해체공사 감리대가 산출기 사용자 매뉴얼 Ver-5.0"
+node pdf_demol.js "$M" DEMOL_사용자매뉴얼_Ver-6.1.pdf "건축물 해체공사 감리대가 산출기 사용자 매뉴얼 Ver-6.1"
 node verify_demol_calc.js "$REPO"
 python3 verify_manual.py "$REPO"
