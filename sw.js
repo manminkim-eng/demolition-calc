@@ -1,4 +1,5 @@
 /* ═══════════════════════════════════════════════════
+   v6.1.4 (2026-11-22) — Claude × Gemini 교차검증 반영(MIN 「4건 모두 반영」): P1 감리원별 직접인건비 원 미만 절사(소수 일수) · P2 음수 일수는 0 · P3 네고는 산출 금액까지만 차감하고 붉은 경고 · P4 신고 대상 상주 근거 「시행령 제23조의2제1항제2호 · 제21조제6항」 — 정수 일수 계산 불변 · 캐시명 v6.1.4 (종전 v6.1.3)
    v6.1.3 (2026-11-20) — 「노임 적용연도」 선택칸(엔지니어링 노임단가 건설부문 2022~2026, 기본 최신) — 직접인건비 · 참고 표 · 계산식 창 단가가 선택 연도로 바뀜, A4 근거 문단에 「○○년 엔지니어링 노임단가(한국엔지니어링협회 공표일 · 적용일, 건설부문)」 문장과 꼬리말 「○○년 노임단가 기준」 추가(MIN 「권장 안으로 진행해줘」 2026-11-20) · 캐시명 v6.1.3 (종전 v6.1.2)
    v6.1.2 (2026-11-12) — html2canvas 1.4.1 머리 태그 SRI(integrity sha384 · crossorigin) · 공통 인쇄 원본 MM-PRINT v1.0 → v1.1(지연 로더도 SRI)(정밀검토 B8 · html2canvas SRI) — 화면 · 계산 · 인쇄 불변 · 작업지시서 §25-6-87 · 캐시명 v6.1.2 (종전 v6.1.1)
    v6.1.1 (2026-11-12) — Pretendard CSS SRI(integrity · crossorigin)(정밀검토 C2) — 화면 · 계산 · 인쇄 불변 · 작업지시서 §25-6-82 · 캐시명 v6.1.1 (종전 v6.1.0)
@@ -41,7 +42,7 @@ const mmMatch = (req, opt) => caches.keys()
   .then((ks) => ks.reduce((p, k) => p.then((r) => r || caches.open(k).then((c) => c.match(req, opt))), Promise.resolve(undefined)))
   .then((r) => (r && r.type === 'opaque' && req && req.mode === 'cors') ? undefined : r);
 
-const CACHE  = 'demolish-v6.1.3';   /* 2026-09-03 v5.0 디자인 통일 */
+const CACHE  = 'demolish-v6.1.4';   /* 2026-09-03 v5.0 디자인 통일 */
 const ORPHAN = ['demolish-v3.0'];
 const ASSETS = [
   './',

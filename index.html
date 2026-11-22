@@ -998,7 +998,7 @@ footer.mm-foot{position:relative;z-index:1;border-top:1px solid #e4e9f0;backgrou
           <div style="font-size:11px;font-weight:900;color:#64748b;margin-bottom:8px;padding:6px 10px;background:#f1f5f9;border-radius:6px;">해체 신고 대상 — 수시 또는 필요한 때 현장 감리</div>
           <div class="fml-note" style="margin-bottom:8px;">해체공사감리자는 수시 또는 필요한 때 현장에서 감리업무를 수행합니다(법 제31조제3항).</div>
           <div class="fml-hi org">
-            <div style="font-size:11px;font-weight:800;color:#c2410c;margin-bottom:5px;">⚠ 신고 대상이라도 전체 공사기간 배치(1명 이상) — 시행령 제21조제6항</div>
+            <div style="font-size:11px;font-weight:800;color:#c2410c;margin-bottom:5px;">⚠ 신고 대상이라도 전체 공사기간 배치(1명 이상) — 시행령 제23조의2제1항제2호 · 제21조제6항</div>
             <div class="fml-note">· 특수구조 건축물 · 10톤 이상 장비를 올려 해체 · 폭파 해체<br/>· 주변에 조례로 정하는 시설(버스 정류장 · 도시철도 역사 출입구 · 횡단보도 등)이나 조례로 정하는 폭 이상의 도로가 있으면 신고가 아니라 <b>해체 허가 대상</b>(법 제30조제2항)</div>
           </div>
         </div>
@@ -1251,6 +1251,7 @@ footer.mm-foot{position:relative;z-index:1;border-top:1px solid #e4e9f0;backgrou
             </div>
             <input class="fire-input" type="text" inputmode="numeric" id="negoAmount" value="0" placeholder="협의 차감액 입력" oninput="fmtInput(this);recalc()" style="border-color:#fdba74;background:#fff;"/>
             <div class="nego-note">* 입력한 금액만큼 최종 공급가액에서 차감됩니다.</div>
+            <div id="negoWarn" style="display:none;font-size:11px;font-weight:700;color:#b91c1c;margin-top:4px;"></div>
           </div>
         </div>
 
@@ -1494,24 +1495,28 @@ function updateSlider(id){
 function recalc(){
   const wy=wageApply();
   const g1=document.getElementById('sup1Grade').value;
-  const d1=+document.getElementById('sup1Days').value||0;
+  const d1=Math.max(0,+document.getElementById('sup1Days').value||0);   /* v6.1.4 — 음수 일수는 0(교차검증 P2) */
   const g2=document.getElementById('sup2Grade').value;
-  const d2=g2==='none'?0:(+document.getElementById('sup2Days').value||0);
+  const d2=g2==='none'?0:Math.max(0,+document.getElementById('sup2Days').value||0);
   const oR=+document.getElementById('overheadRate').value;
   const tR=+document.getElementById('techFeeRate').value;
   const de=rawNum('directExpenses');
   const ins=rawNum('insuranceFee');
-  const neg=rawNum('negoAmount');
+  const negIn=rawNum('negoAmount');
   const vat=document.getElementById('includeVat').checked;
 
   document.getElementById('sup2Days').disabled=(g2==='none');
 
-  const l1=RATES[g1]*d1, l2=RATES[g2]*d2;
+  const l1=Math.floor(RATES[g1]*d1), l2=Math.floor(RATES[g2]*d2);   /* v6.1.4 — 감리원별 원 미만 절사(소수 일수, 교차검증 P1) */
   const labor=l1+l2;
   const days=Math.max(d1,d2);
   const over=mmPct(labor,oR);   /* v5.0.6 — 정수 곱 뒤 나눗셈(부동소수 오차로 1원·1,000원 적게 나오던 문제) */
   const tech=mmPct(labor+over,tR);
-  const sub=labor+over+tech+de+ins-neg;
+  const pre=labor+over+tech+de+ins;
+  const neg=Math.min(negIn,pre);   /* v6.1.4 — 네고는 산출 금액까지만 차감(교차검증 P3) */
+  const nw=document.getElementById('negoWarn');
+  if(nw){ nw.style.display=negIn>pre?'block':'none'; nw.textContent=negIn>pre?`⚠ 네고가 산출 금액(${fmt(pre)}원)보다 큽니다 — 산출 금액까지만 차감합니다.`:''; }
+  const sub=pre-neg;
   const vatAmt=vat?mmPct(sub,10):0;
   const total=Math.floor((sub+vatAmt)/1000)*1000;
 
